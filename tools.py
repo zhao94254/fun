@@ -4,6 +4,9 @@ from functools import wraps
 import inspect
 import sys
 import logging
+import signal
+import code
+
 
 def timeit(func):
     """统计函数运行时间"""
@@ -89,5 +92,32 @@ def fib(x):
     return x if x < 2 else fib(x-1) + fib(x-2)
 
 
+def interact(msg=None):
+    """类似于 pdb.stace() 的函数
 
+    On Unix:
+      <Control>-D exits the interactive session and returns to normal execution.
+    In Windows:
+      <Control>-Z <Enter> exits the interactive session and returns to normal
+      execution.
+    """
+    # evaluate commands in current namespace
+    frame = inspect.currentframe().f_back
+    namespace = frame.f_globals.copy()
+    namespace.update(frame.f_locals)
+
+    # exit on interrupt
+    def handler(signum, frame):
+        print()
+        exit(0)
+    signal.signal(signal.SIGINT, handler)
+
+    if not msg:
+        _, filename, line, _, _, _ = inspect.stack()[1]
+        msg = 'Interacting at File "{0}", line {1} \n'.format(filename, line)
+        msg += '    Unix:    <Control>-D continues the program; \n'
+        msg += '    Windows: <Control>-Z <Enter> continues the program; \n'
+        msg += '    exit() or <Control>-C exits the program'
+
+    code.interact(msg, None, namespace)
 
