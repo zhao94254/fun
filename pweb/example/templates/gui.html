@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="Ants Web Viewer">
+        <meta name="author" content="Colin Schoen">
+        <link rel="icon" href="../../favicon.ico">
+
+        <title>Ants Web GUI</title>
+
+        <!-- Bootstrap core CSS -->
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Animate.css -->
+        <link href="{{ url_for('static', filename='assets/animate.css') }}" rel="stylesheet">
+
+        <!-- SweetAlert.css -->
+        <link href="{{ url_for('static', filename='assets/sweetalert.css') }}" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <!-- Custom styles for this template -->
+        <link href="{{ url_for('static', filename='assets/app.css') }}" rel="stylesheet">
+
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img class="logo" src="{{ url_for('static', filename='assets/logo.png') }}" /> <a class="navbar-brand" href="#">Ants Web GUI</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li style="display: none;" class="active"><a href="#">Home</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+        </nav>
+
+        <div id="gameWrapper" class="game-wrapper" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <h3><button id="exitBtn" class="btn btn-danger exit-btn"><i class="fa fa-times fa-fw"></i> Exit GUI</button><span class="label label-warning">Food: <strong id="foodCount">1</strong></span> <span class="label label-warning">Time: <strong id="timeCount">0</strong></span></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered ants-table">
+                                <tr id="antsTableRow">
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="places-table">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hero-head" style="-webkit-animation-duration: 1.3s; -mov-animation-duration: 1.3s;" class="hero-header">
+            <div class="row" style="margin-right: 0px">
+                <div class="col-lg-12" style="margin-left: 120px; margin-top: 350px;">
+                    <h1 id="header-title"><span class="header-text">Ants Web Viewer</span></h1>
+                    <p class="lead"><button id="playBtn" class="btn btn-info">Play Ants <i class="fa fa-play fa-fw"></i></button></p>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="display: none; margin-top: 50px;">
+        </div><!-- /.container -->
+
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+
+        <script src="{{ url_for('static', filename='jquare.js')}}"></script>
+        <script src="{{ url_for('static', filename='jquare-ui.js')}}"></script>
+        <script src="{{ url_for('static', filename='bootstrap.js')}}"></script>
+        <!-- Sweet Alert JS -->
+        <script src="{{ url_for('static', filename='assets/sweetalert.min.js') }}"></script>
+
+        <!-- Load our own JS file -->
+        <script src="{{ url_for('static', filename='assets/app.js') }}"></script>
+    </body>
+</html>
