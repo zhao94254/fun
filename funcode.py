@@ -30,4 +30,9 @@
 # prime = lambda n: [ i for i in range(2, n) if all([i%j!=0 for j in range(2, i)])]
 # prime = lambda n: [ i for i in range(2, n) if all(map(lambda j: i%j!=0, range(2, i)))]
 
+# 强行一行二分搜索
+bs = lambda x, y, i, j: None if i > j else y == x[(i+j)//2] \
+                                            or (y < x[(i+j)//2] and bs(x, y, i, (i+j)//2-1)) \
+                                            or (y > x[(i+j)//2] and bs(x, y, (i+j)//2+1, j))
 
+# print(bs((4,6,10,12,20,30,50,70,88,100),2,0,9))
