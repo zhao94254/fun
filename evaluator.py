@@ -22,7 +22,7 @@ fact = lambda x: 1 if x == 1 else fact(x-1)*x
 
 def assert_non_token(tokens):
     if len(tokens) == 0:
-        raise SystemError('Input Wrong')
+        raise SyntaxError('Input Wrong')
 
 # Parse
 
@@ -112,7 +112,7 @@ def calc_apply(op, argument):
         elif len(argument) == 1:
             return -argument
         else:
-            return sum(argument[0] + [-i for i in argument[1:]])
+            return sum(argument[:1] + [-i for i in argument[1:]])
     elif op in ('*', 'mul'):
         return reduce(mul, argument, 1)
     elif op in ('/', 'div'):
