@@ -62,6 +62,14 @@ def next_token(src):
         raise SyntaxError("{} is not a token".format(c))
 
 
+def read(s):
+    src = Buffer(tokenize(s))
+    if src.current() is not None:
+        return read_expr(src)
+
+def read_expr(src):
+    """将经过tokenize 分割的字符转化为具体的对象"""
+
 
 
 
