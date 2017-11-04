@@ -44,6 +44,18 @@ def max_subarray(x, array):
         res = max(res, tmp)
     return res
 
+def move_stack(n, start, end, tmp):
+    """汉诺塔 理解递归&栈"""
+    if n == 1:
+        print("move {}  from {} --> to {}".format(n, start, end))
+    else:
+        move_stack(n-1, start,tmp, end)
+        print("move {}  from {} --> to {}".format(n, start, end))
+        move_stack(n-1, tmp, end, start)
+
+
+
+
 
 
 
