@@ -119,7 +119,17 @@ def is_symmetrical(tree1, tree2):
         return True
     return helper(tree1.left, tree2.right)
 
-
+def is_rotate(s1, s2):
+    """
+    >>>is_rotate('12345', '34512')
+    True
+    :param s1:
+    :param s2:
+    :return:
+    """
+    if s2 in s1*2:
+        return True
+    return False
 
 
 
