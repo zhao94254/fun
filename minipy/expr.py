@@ -89,6 +89,19 @@ class LambdaExpr(Expr):
         else:
             return 'lambda ' + comma_separated(body)
 
+
+class CallExpr(Expr):
+    def __init__(self, operator, operands):
+        Expr.__init__(self, operator, operands)
+        self.operator = operator
+        self.operands = operands
+
+    def eval(self, env):
+        function = self.operator.eval(env)
+        arguments = [o.eval(env) for o in self.operands]
+        return function.apply(arguments)
+
+
 # Value
 
 class Value:
@@ -154,3 +167,40 @@ class LambdaFunction(Value):
     def __str__(self):
         definition = LambdaExpr(self.parameters, self.body)
         return "<function {}>".format(definition)
+
+
+class PrimitiveFunction(Value):
+    """提供一些内置函数。"""
+    def __init__(self, operator):
+        Value.__init__(self, operator)
+        self.operator = operator
+
+    def apply(self, arguments):
+        for a in arguments:
+            if not isinstance(a, Number):
+                raise TypeError("Invalid argument {} to {}".format(
+                    comma_separated(arguments), self
+                ))
+        return Number(self.operator(*[a.value for a in arguments]))
+
+    def __str__(self):
+        return '<primitive function {}>'.format(self.operator.__name__)
+
+
+# 内置函数，可以根据需要自己添加
+
+global_env = {
+    'abs': PrimitiveFunction(operator.abs),
+    'add': PrimitiveFunction(operator.add),
+    'float': PrimitiveFunction(float),
+    'floordiv': PrimitiveFunction(operator.floordiv),
+    'int': PrimitiveFunction(int),
+    'max': PrimitiveFunction(max),
+    'min': PrimitiveFunction(min),
+    'mod': PrimitiveFunction(operator.mod),
+    'mul': PrimitiveFunction(operator.mul),
+    'pow': PrimitiveFunction(pow),
+    'sub': PrimitiveFunction(operator.sub),
+    'truediv': PrimitiveFunction(operator.truediv),
+}
+
