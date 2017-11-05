@@ -3,7 +3,7 @@
 # 用来将分析后的单词构造为具体的表达式
 
 import operator
-from .units import comma_separated
+from units import comma_separated
 
 
 class Expr:
@@ -42,12 +42,52 @@ class Expr:
 
 
 class Literal(Expr):
-    pass
+    """返回一个数字"""
+    def __init__(self, value):
+        Expr.__init__(value)
+        self.value = value
+
+    def eval(self, env):
+        return Number(self.value)
+
+    def __str__(self):
+        return str(self.value)
 
 
 class Name(Expr):
-    pass
+    """ Name 是一个变量"""
+    def __init__(self, string):
+        Expr.__init__(self, string)
+        self.string = string
 
+    def eval(self, env):
+        """
+        >>> env = {'a':Number(1), 'b': Number(3)}
+        >>> Name('a').eval(env)
+        1
+        :param env:
+        :return:
+        """
+        if self.string not in env:
+            raise NameError("{} not in env".format(self.string))
+        return env[self.string]
+
+
+class LambdaExpr(Expr):
+    def __init__(self, parameters, body):
+        Expr.__init__(self, parameters, body)
+        self.parameters = parameters
+        self.body = body
+
+    def eval(self, env):
+        return LambdaFunction(self.parameters, self.body, env)
+
+    def __str__(self):
+        body = str(self.body)
+        if not self.parameters:
+            return 'lambda: ' + body
+        else:
+            return 'lambda ' + comma_separated(body)
 
 class Value:
     """
@@ -70,7 +110,9 @@ class Value:
         args  = '(' + comma_separated([repr(arg) for arg in self.args ]) + ')'
         return type(self).__name__ + args
 
+
 class Number(Value):
+    """ 返回一个数字 """
     def __init__(self, value):
         Value.__init__(self, value)
         self.value = value
@@ -80,6 +122,33 @@ class Number(Value):
             self.value, comma_separated(arguments)
         ))
 
+    def __str__(self):
+        return str(self.value)
 
 
+class LambdaFunction(Value):
+    """ 创建一个lambda function 通过lambdaexpr.expr 来执行，"""
+    def __init__(self, parameters, body, parent):
+        Value.__init__(self, parameters, body, parent)
+        self.parameters = parameters
+        self.body = body
+        self.parent = parent
 
+    def apply(self, arguments):
+        """
+        将参数绑定到lambda 的 变量中。
+        :param arguments:
+        :return:
+        """
+        if len(self.parameters) != len(arguments):
+            raise TypeError("Cannot match parameters {} to arguments {}".format(
+                comma_separated(self.parameters), arguments
+            ))
+        env = self.parent.copy()
+        for p, a in zip(self.parameters, arguments):
+            env[p] = a
+        return self.body.eval(env)
+
+    def __str__(self):
+        definition = LambdaExpr(self.parameters, self.body)
+        return "<function {}>".format(definition)
