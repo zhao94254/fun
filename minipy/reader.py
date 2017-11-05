@@ -12,7 +12,11 @@ NUMERAL = set(string.digits + '-.')
 WHITESPACE = set(' \t\n\r')
 DELIMITERS = set('(),:')
 
+def is_literal(s):
+    return isinstance(s, (int, float))
 
+def is_name(s):
+    return isinstance(s, str) and s not in DELIMITERS and s != 'lambda'
 
 # tokenize
 
@@ -69,9 +73,34 @@ def read(s):
 
 def read_expr(src):
     """将经过tokenize 分割的字符转化为具体的对象"""
+    token = src.pop()
+    if token is None:
+        raise SyntaxError('Incomplete expression')
+    elif is_literal(token):
 
+def read_comma_separated(src, reader):
+    if src.current() in (':', ')'):
+        return []
+    else:
+        s = [reader(src)]
+        while src.current() == ',':
+            src.pop()
+            s.append(reader(src))
+        return s
 
+def read_call_expr(src, operator):
+    while src.current() == '(':
+        src.pop()
+        operands = read_comma_separated(src, read_expr)
+        src.expect(')')
+        operator = CallExpr(operator, operands)
+    return operator
 
-
+def read_param(src):
+    token = src.pop()
+    if is_name(token):
+        return token
+    else:
+        raise SyntaxError("Expected parameter name but got '{}'".format(token))
 
 

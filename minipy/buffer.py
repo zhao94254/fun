@@ -36,6 +36,13 @@ class Buffer:
         else:
             return self.source[self.index]
 
+    def expect(self, expected):
+        actual = self.pop()
+        if expected != actual:
+            raise SyntaxError("expected '{}' but got '{}'".format(expected, actual))
+        else:
+            return actual
+
     def __str__(self):
         return str(self.source[self.index:])
 
