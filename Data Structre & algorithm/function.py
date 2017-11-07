@@ -132,6 +132,16 @@ def is_rotate(s1, s2):
     return False
 
 
+def count_bin(x):
+    """统计x的二进制中1的个数"""
+    res = 0
+    for i in range(32):
+        if x & 1:
+            res += 1
+        x >>= 1
+    return res
+
+
 
 
 
