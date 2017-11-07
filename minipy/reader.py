@@ -5,6 +5,7 @@
 
 import string
 from buffer import Buffer
+from expr import *
 
 SYMBOL_STARTS = set(string.ascii_lowercase + string.ascii_uppercase + '_')
 SYMBOL_INNERS = SYMBOL_STARTS | set(string.digits)
@@ -77,6 +78,20 @@ def read_expr(src):
     if token is None:
         raise SyntaxError('Incomplete expression')
     elif is_literal(token):
+        return read_call_expr(src, Literal(token))
+    elif is_name(token):
+        return read_call_expr(src, Name(token))
+    elif token == 'lambda':
+        params = read_comma_separated(src, read_param)
+        src.expect(':')
+        body = read_expr(src)
+        return LambdaExpr(params, body)
+    elif token == '(':
+        inner_expr = read_expr(src)
+        src.expect(')')
+        return read_call_expr(src, inner_expr)
+    else:
+        raise SyntaxError("{} is not the start of a expression".format(token))
 
 def read_comma_separated(src, reader):
     if src.current() in (':', ')'):

@@ -44,7 +44,7 @@ class Expr:
 class Literal(Expr):
     """返回一个数字"""
     def __init__(self, value):
-        Expr.__init__(value)
+        Expr.__init__(self, value)
         self.value = value
 
     def eval(self, env):
@@ -97,9 +97,28 @@ class CallExpr(Expr):
         self.operands = operands
 
     def eval(self, env):
+        """
+        首先时获取到 操作符 操作数。然后global_env获取到真正
+        可以操作的来执行。
+        >>>_env = global_env.copy()
+        >>> _env.update({'a': Number(1), 'b': Number(2)})
+        >>> add = CallExpr(Name('add'), [Literal(3), Name('a')])
+        >>> add.eval(_env)
+        Number(4)
+        :param env:
+        :return:
+        """
         function = self.operator.eval(env)
         arguments = [o.eval(env) for o in self.operands]
         return function.apply(arguments)
+
+    def __str__(self):
+        function = str(self.operator)
+        args = '(' + comma_separated(self.operands) + ')'
+        if isinstance(self.operands, LambdaExpr):
+            return '(' + function + ')' + args
+        else:
+            return function + args
 
 
 # Value
