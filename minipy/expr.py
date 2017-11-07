@@ -108,7 +108,13 @@ class CallExpr(Expr):
         :param env:
         :return:
         """
+        # 支持def
         function = self.operator.eval(env)
+
+        if isinstance(self.operator, Name) and self.operator.string == 'def':
+            operators = [o.string for o in self.operands if isinstance(o, Name)]
+            operands = [o.eval(env) for o in self.operands if isinstance(o, Literal)]
+            return function.operator(env, operators, operands)
         arguments = [o.eval(env) for o in self.operands]
         return function.apply(arguments)
 
@@ -208,6 +214,16 @@ class PrimitiveFunction(Value):
 
 # 内置函数，可以根据需要自己添加
 
+fact = lambda x: 1 if x == 1 else fact(x-1) * x
+
+def do_define(env, operators, operands):
+    if len(operators) != len(operands):
+        raise SyntaxError("Not match")
+    for i, j in zip(operators, operands):
+        env[i] = j
+    return
+
+
 global_env = {
     'abs': PrimitiveFunction(operator.abs),
     'add': PrimitiveFunction(operator.add),
@@ -221,5 +237,8 @@ global_env = {
     'pow': PrimitiveFunction(pow),
     'sub': PrimitiveFunction(operator.sub),
     'truediv': PrimitiveFunction(operator.truediv),
+    # self define
+    'fact': PrimitiveFunction(fact),
+    'def': PrimitiveFunction(do_define),
 }
 
