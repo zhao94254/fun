@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # @Author  : pengyun
 
+# 一些代码练习
+
 def convert(n, x):
     """
     在短网址系统会使用到这样的一个转化，将一个大的十进制数转化为一个
@@ -140,6 +142,28 @@ def count_bin(x):
             res += 1
         x >>= 1
     return res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

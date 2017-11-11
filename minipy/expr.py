@@ -217,6 +217,8 @@ class PrimitiveFunction(Value):
 fact = lambda x: 1 if x == 1 else fact(x-1) * x
 
 def do_define(env, operators, operands):
+    import pdb
+    pdb.set_trace()
     if len(operators) != len(operands):
         raise SyntaxError("Not match")
     for i, j in zip(operators, operands):
