@@ -4,7 +4,14 @@
 # python 中常用的数据结构
 
 # 可变
-# list dict
+# list dict set
+
+# 不可变
+# str frozenset
+
+
+
+
 
 
 
