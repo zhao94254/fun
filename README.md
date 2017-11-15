@@ -1,12 +1,20 @@
-# interest  in python 3.6
-sort
-使用 python sort.py -h 查看
-sort_visual
-使用 python sort_visual.py -h 查看
+datastructre_algorithm 数据结构和算法 以及一些练习  
 
-tools.py 一些有用的工具函数
-descriptor python描述符的使用
-funcode 一些有意思的py代码
+interpreter 从一个简单的计算器解释器到mini py 到scheme解释器  
+
+network 计算机网络笔记 练习  
+
+pweb web&http方面的笔记 练习  
+
+python_magic 有意思的一些代码  
+
+tools 常用工具函数  
+
+
+
+
+
+
 
 
 

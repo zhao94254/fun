@@ -3,5 +3,5 @@
 
 # mini python
 
-from minipy import buffer
+from Interpreter.minipy import buffer
 
