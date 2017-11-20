@@ -5,16 +5,23 @@
 # @Software: PyCharm
 
 
+
+
 def two_sum(numbers, target):
-    """ two sum """
+    """
+        @param numbers : An array of Integer
+        @param target : target = numbers[index1] + numbers[index2]
+        @return : [index1 + 1, index2 + 1] (index1 < index2)
+    """
     for i, num in enumerate(numbers):
         tmp = target - num
-        if tmp in numbers:
-            return [i+1, numbers.index(tmp)+1]
+        t = i+1
+        if tmp in numbers[t:]:
+            return [i+1, t+numbers[i+1:].index(tmp)+1]
     return []
 
 def three_sum(numbers, target):
-    """ three sum"""
+    """ three sum 同上面的二数之和"""
     for i, num in enumerate(numbers):
         f = target - num
         res = two_sum(numbers[i+1:], f)
@@ -23,6 +30,9 @@ def three_sum(numbers, target):
     return []
 
 
-print(three_sum(list(range(10)), 6))
+
+
+# print(two_sum([0,4,3,0], 0))
+# print(three_sum(list(range(10)), 6))
 
 
