@@ -14,43 +14,18 @@ def convert(n, x):
     >>>convert(62, 563453245)
     V8;iS
     """
-    tmp = [chr(48+i) for i in range(n)]
+    tmp = [chr(48 + i) for i in range(n)]
     res = ''
     while x > 0:
         res += tmp[x % n]
-        x = x//n
+        x = x // n
     print(res[::-1])
-
-
-def max_num(array):
-    """
-    最大连续子数组，考虑到全为负数的情况
-    :param array:
-    :return:
-    """
-    if len(array) == len([i for i in array if i<0]):
-        return max(array)
-    res, tmp = 0, 0
-    for i in array:
-        tmp += i
-        res = max(res, tmp)
-        if tmp < 0:
-            tmp = 0
-    return res
-
-def max_subarray(x, array):
-    """求长为x的最大子数组"""
-    tmp, res = 0, 0
-    for i in range(len(array)-x):
-        tmp = sum(array[i:i+x])/x
-        res = max(res, tmp)
-    return res
-
 
 
 def reorder_lst(lst):
     """将奇数放在前面，并保持相对位置不变"""
-    return [i for i in lst if i%2 ] + [i for i in lst if i%2==0 ]
+    return [i for i in lst if i % 2] + [i for i in lst if i % 2 == 0]
+
 
 def josephus(n, m):
     """约瑟夫环问题"""
@@ -59,73 +34,7 @@ def josephus(n, m):
     m -= 1
     p = 0
     while n:
-        p = (p+m)%len(n)
+        p = (p + m) % len(n)
         if len(n) == 1:
             return n[0]
         del n[p]
-
-
-def is_symmetrical(tree1, tree2):
-    """检查两个树是否互为镜像树"""
-    def helper(l, r):
-        if l is None and r is None:
-            return True
-        if l is None or r is None:
-            return False
-        if l.val != r.val:
-            return False
-        return helper(l.left, r.right) and helper(l.right, r.left)
-    if tree1 is None and tree2 is None:
-        return True
-    return helper(tree1.left, tree2.right)
-
-def is_rotate(s1, s2):
-    """
-    >>>is_rotate('12345', '34512')
-    True
-    :param s1:
-    :param s2:
-    :return:
-    """
-    if s2 in s1*2:
-        return True
-    return False
-
-
-def count_bin(x):
-    """统计x的二进制中1的个数"""
-    res = 0
-    for i in range(32):
-        if x & 1:
-            res += 1
-        x >>= 1
-    return res
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
