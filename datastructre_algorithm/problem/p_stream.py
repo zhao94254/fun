@@ -24,7 +24,7 @@ def fib_stream(a, b):
 def filter_stream(fn, s):
     if s is None:
         return s
-    compute_rest = lambda fn, x: filter_stream(fn, s.rest)
+    compute_rest = lambda : filter_stream(fn, s.rest)
     if fn(s.first):
         return Stream(s.first, compute_rest)
     return compute_rest()
@@ -33,13 +33,16 @@ def list_to_stream(lst):
     s = Stream(lst[0])
     c = s
     for i in lst[1:]:
-        c.rest = lambda : Stream(i)
+        c.second = lambda : Stream(i)
         c = c.rest
-    return stream_to_list(s)
+    # return stream_to_list(s)  for test
+    return s
 
 
 
 if __name__ == '__main__':
+    f = filter_stream(lambda x: x%2, list_to_stream(list(range(100))))
+    print(stream_to_list(f))
     #
     # f = fib_stream(0, 1)
     #
@@ -48,4 +51,4 @@ if __name__ == '__main__':
     #     f = f.rest
     #
     # print(stream_to_list(s))
-    print(list_to_stream(list(range(10))))
+    # print(list_to_stream(list(range(10))))
