@@ -3,8 +3,10 @@
 # @Created on    : 17/11/17 下午4:51
 # @Author  : zpy
 # @Software: PyCharm
+import sys
+sys.path.append("..")
 
-from ..data_structre.tree import BinTree
+from data_structre.tree import BinTree
 
 
 def is_symmetrical(tree1, tree2):
