@@ -18,7 +18,7 @@ tools 常用工具函数
 
 
 
-##python 代码风格
+## python 代码风格
 
 命名： 清晰易懂，代码风格要一致
 
@@ -42,7 +42,7 @@ Bad
 	thing = ' hello world'
 	stuff = lambda x: x % 2
 
-##注意字母和数字
+## 注意字母和数字
 
 当很明确一个字母是做什么的时候，使用缩写的可以的。
 
@@ -60,7 +60,7 @@ Bad
 	用 o 和 l 很容易使 o 和 0 ，l 和1搞混
 
 
-##不必要的变量
+## 不必要的变量
 
 Good
 
@@ -86,7 +86,7 @@ Bad
 	
 	
 	
-##命名约定
+## 命名约定
 
 Good
 	total_score = 0
@@ -109,7 +109,7 @@ Bad
 使用空格代替tab，一般使用四个空格键。保存一行代码不要过长，
 大概在 70 个字符作用就好。
 
-##操作符之间的间隔
+## 操作符之间的间隔
 
 Good
 
@@ -135,7 +135,7 @@ Good
 			' eve' )
 	
 	
-##控制语句
+## 控制语句
 
 Bad
 
@@ -171,7 +171,7 @@ python 中的 [] , () , {} , set() 都可以使用bool判断
 	这里也不可以使用 not x，因为可能传入的是一个空字符，
 	这种程序就会报错。
 
-##多余的if else
+## 多余的if else
 
 Bad
 
@@ -230,7 +230,7 @@ Bad
 		x += 1 # increments x by 1
 		return square(x) # returns the square of x
 			
-##重复，使用一个变量保存。
+## 重复，使用一个变量保存。
 
 Bad
 
@@ -245,7 +245,7 @@ Good
 		total += turn_score
 		return total
 		
-##合理使用 列表生成式
+## 合理使用 列表生成式
 
 Good
 
