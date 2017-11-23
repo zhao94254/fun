@@ -9,7 +9,7 @@ sys.path.append("..")
 from data_structre.stream import Stream
 
 def integer_stream(first):
-    return Stream(first, lambda :Stream(first+1))
+    return Stream(first, lambda : integer_stream(first+1))
 
 def stream_to_list(stream):
     _list = []
@@ -29,6 +29,12 @@ def filter_stream(fn, s):
         return Stream(s.first, compute_rest)
     return compute_rest()
 
+def map_stream(fn, s):
+    if s is None:
+        return s
+    compute_rest = lambda : map_stream(fn, s.rest)
+    return Stream(fn(s.first), compute_rest)
+
 def list_to_stream(lst):
     s = Stream(lst[0])
     c = s
@@ -39,10 +45,33 @@ def list_to_stream(lst):
     return s
 
 
+def primes(s):
+    def not_div(x):
+        return x % s.first != 0
+    def compute_rest():
+        return primes(filter_stream(not_div, s.rest))
+    return Stream(s.first, compute_rest)
+
+def first_k(k, s):
+    res = []
+    for i in range(k):
+        if s is None:
+            break
+        res.append(s.first)
+        s = s.rest
+    return res
+
 
 if __name__ == '__main__':
-    f = filter_stream(lambda x: x%2, list_to_stream(list(range(100))))
-    print(stream_to_list(f))
+    s = list_to_stream(list(range(100)))
+    f = filter_stream(lambda x: x%2, s)
+    #print(stream_to_list(f))
+    m = map_stream(lambda x:x*x, s)
+    #print(stream_to_list(m))
+    print(first_k(5, m))
+    print(first_k(6, integer_stream(1)))
+    print(first_k(5, primes(integer_stream(2))))
+    # print(stream_to_list(f))
     #
     # f = fib_stream(0, 1)
     #
