@@ -6,6 +6,10 @@ network 计算机网络笔记 练习
 
 pweb web&http方面的笔记 练习  
 
+os 操作系统方面的
+
+other 其它 比如 sicp之类的
+
 python_magic 有意思的一些代码  
 
 tools 常用工具函数  
