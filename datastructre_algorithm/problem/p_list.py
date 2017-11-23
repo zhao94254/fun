@@ -7,7 +7,7 @@
 
 def max_subarray(nums):
     """ 最大子数组 """
-    if all(map(lambda x:x<0), nums):
+    if all(map(lambda x:x<0, nums)):
         return max(nums)
     res, tmp = 0, 0
     for i in nums:
@@ -38,6 +38,17 @@ def max_x_array(x, array):
         res = max(res, tmp)
     return res
 
+def lcs(a, b):
+    """ 最长公共子串"""
+    tmp = [[0]* (len(b)+1) for _ in range(len(a)+1)]
+    for i in range(len(a)):
+        for j in range(len(b)):
+            if a[i] == b[j]:
+                tmp[i][j] = tmp[i-1][j-1]+1
+            else:
+                tmp[i][j] = max(tmp[i][j-1], tmp[i-1][j])
+    return tmp[-2][-2]
+
 
 
 if __name__ == '__main__':
@@ -45,3 +56,5 @@ if __name__ == '__main__':
     max_subarray(data)
     max_x_array(3, data)
     sub_sum_zero(data)
+    print(lcs('asdfjshadkjfhkahsdkf', 'asdfjklsadjlfjlskd'))
+

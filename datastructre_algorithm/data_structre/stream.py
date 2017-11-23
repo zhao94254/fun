@@ -16,7 +16,6 @@ class Stream:
     def rest(self):
         """只在第一次调用时计算一次 second"""
         if self.second is not None:
-            print('call')
             self._rest = self.second()
             self.second = None
         return self._rest
