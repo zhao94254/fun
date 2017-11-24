@@ -4,8 +4,17 @@
 # @Author  : zpy
 # @Software: PyCharm
 
+def find_str(s, target):
+    """在s中查找target 并返回target在s中的起始位置"""
+    lent = len(target)
+    for i in range(len(s)-lent):
+        if s[i: i+lent] == target:
+            return i
+    return -1
 
-
+def unique_s(s):
+    """判断字符串是否有重复字符。"""
+    return len(set(s)) == len(s)
 
 def is_rotate(s1, s2):
     """
@@ -35,11 +44,22 @@ def anagrams(lst):
             res += _map[m]
     return res
 
+def lcp(strs):
+    """返回最长公共前缀"""
+    res = ''
+    tmp = ''
+    for i in zip(*strs):
+        if len(set(i)) == 1:
+            tmp += i[0]
+        else:
+            tmp = ''
+        res = res if len(res) > len(tmp) else tmp
+    return res
 
 if __name__ == '__main__':
 
-    print(anagrams(['lint','inlt','intl','fkkk']))
-
+    # print(anagrams(['lint','inlt','intl','fkkk']))
+    print(lcp(['abcd','abcdd','abe']))
 
 
 
