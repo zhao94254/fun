@@ -23,3 +23,39 @@ class MinStack:
 
     def min(self):
         return self.min_stack[-1]
+
+def valid_parentheses(s):
+    """有效的括号序列"""
+    stack = []
+    for i in s:
+        if i == '(':
+            stack.append(i)
+        elif i == ')' and len(stack) == 0:
+            return False
+        else:
+            stack.pop()
+    return True
+
+def eval_rpn(lst):
+    """逆波兰求值"""
+    stack = []
+    for i in lst:
+        if i == '+':
+            a1, a2 = stack.pop(), stack.pop()
+            stack.append(a1+a2)
+        elif i == '-':
+            a1, a2 = stack.pop(), stack.pop()
+            stack.append(a2 - a1)
+        elif i == '*':
+            a1, a2 = stack.pop(), stack.pop()
+            stack.append(a2 * a1)
+        elif i == '/':
+            a1, a2 = stack.pop(), stack.pop()
+            stack.append(int(a2 / a1))
+        else:
+            stack.append(int(i))
+    return stack[-1]
+
+if __name__ == '__main__':
+    # print(valid_parentheses('(()()((()))'))
+    print(eval_rpn(["10","6","9","3","+","-11","*","/","*","17","+","5","+"]))
