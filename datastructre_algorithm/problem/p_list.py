@@ -154,9 +154,24 @@ def largest_area(lst):
         res = max(res, lst[start]*width)
     return res
 
+def trip_rainwater(lst):
+    """  接雨水。思路用四个指针来记录。"""
+    res = 0
+    l, r, lmax, rmax = 0, len(lst)-1, 0, 0
+    while l < r:
+        lmax = max(lmax, lst[l]) # 记录左面的高点
+        rmax = max(rmax, lst[r]) # 右面的高点
+        if lmax < rmax:
+            res += lmax-lst[l] # 坑的大小
+            l += 1
+        else:
+            res += rmax-lst[r]
+            r -= 1
+    return res
+
 if __name__ == '__main__':
     print(largest_area([21,2,23,12,25,26,27,15,20]))
-
+    print(trip_rainwater([0,1,0,2,1,0,1,3,2,1,2,1]))
 
 
 
