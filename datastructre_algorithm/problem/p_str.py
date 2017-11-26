@@ -56,6 +56,8 @@ def lcp(strs):
         res = res if len(res) > len(tmp) else tmp
     return res
 
+
+
 if __name__ == '__main__':
 
     # print(anagrams(['lint','inlt','intl','fkkk']))

@@ -4,6 +4,25 @@
 # @Author  : zpy
 # @Software: PyCharm
 
+def triangle_count(lst):
+    """ 给一个列表，返回可以组成三角形的个数.
+    思路：将列表排序，每次先找到最大的一条边。然后从之前开始找
+    符合条件的一个区间的
+    """
+    res = 0
+    if len(lst) < 3:
+        return 0
+    lst.sort()
+    for i in range(2, len(lst)):
+        longest = lst[i]
+        l, r = 0, i-1
+        while l < r:
+            if lst[l]+lst[r] <= longest: # 如果小于，向右走
+                l += 1
+            else:
+                res += r-l
+                r -= 1
+    return res
 
 def max_subarray(nums):
     """ 最大子数组 """
@@ -49,6 +68,81 @@ def lcs(a, b):
                 tmp[i][j] = max(tmp[i][j-1], tmp[i-1][j])
     return tmp[-2][-2]
 
+def lics(lst):
+    """最长连续上升子序列"""
+    if len(lst) == 0:
+        return 0
+    def helper(lst):
+        res, tmp = 0, 0
+        for i in range(1, len(lst)):
+            if lst[i] > lst[i-1]:
+                tmp += 1
+            else:
+                tmp = 0
+            res = max(res, tmp)
+        return res+1
+    return max(helper(lst), helper(lst[::-1]))
+
+def median(lst):
+    """ 中位数"""
+    lst.sort()
+    lent = len(lst)
+    if lent % 2:
+        return lst[lent/2]
+    return lst[lent/2-1]
+
+def add_digits(num):
+    """ 38-->3 8-->11-->2.将各位数相加，转为一个比10小的数
+    >>>add_digits(38)
+    2
+    """
+    def helper(num):
+        res = []
+        while num > 0:
+            res.append(num%10)
+            num //= 10
+        return sum(res)
+
+    while True:
+        res = helper(num)
+        num = res
+        if res < 10:
+            return res
+
+def wiggle_sort(lst):
+    """ nums[0] <= nums[1] >= nums[2] <= nums[3]...
+    奇数位的大于之前的，偶数位的小于之前的。
+    """
+    for i in range(1, len(lst)):
+        if (i%2 == 0 and lst[i] > lst[i-1]) or (i%2 and lst[i] < lst[i-1]):
+            lst[i], lst[i-1] = lst[i-1], lst[i]
+    return lst
+
+def max_square(lst):
+    """求一个二维01矩阵中全为1的最大正方形"""
+    res = 0
+    tmp = lst[:]
+    m, n = len(lst), len(lst[0])
+    for i in range(1, m): # 判断当前位置之前的三个位置
+        for j in range(1, n):
+            if lst[i][j] == 0:
+                tmp[i][j] = 0
+            else: # 当前位置为1，将前面的位置的数加上
+                tmp[i][j] = min(lst[i-1][j], lst[i-1][j-1], lst[i][j-1])+1
+    for i in range(m):
+        for j in range(n):
+            res = max(tmp[i][j], res)
+    return res*res
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -56,5 +150,5 @@ if __name__ == '__main__':
     max_subarray(data)
     max_x_array(3, data)
     sub_sum_zero(data)
-    print(lcs('asdfjshadkjfhkahsdkf', 'asdfjklsadjlfjlskd'))
+    # print(lcs('asdfjshadkjfhkahsdkf', 'asdfjklsadjlfjlskd'))
 

@@ -38,3 +38,33 @@ def josephus(n, m):
         if len(n) == 1:
             return n[0]
         del n[p]
+
+
+def trail_zero(n):
+    """统计N的阶乘后0的个数"""
+    res = 0
+    while n > 0:
+        res += n // 5
+        n = n // 5
+    return res
+
+
+def mulitipy(a, b):
+    """ 大数相乘 i位*j位 等于i+j位"""
+    a = [int(i) for i in a][::-1]
+    b = [int(j) for j in b][::-1]
+    res = [0] * len(a+b)
+    for i in range(len(a)):
+        for j in range(len(b)):
+            res[i+j] = a[i]*a[j]
+    for i in range(len(res)):
+        if res[i] > 9:
+            res[i+1] += res[i] // 10 # 进位
+            res[i] = res[i] % 10
+    return res
+
+
+
+
+
+
