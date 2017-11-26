@@ -134,7 +134,28 @@ def max_square(lst):
             res = max(tmp[i][j], res)
     return res*res
 
+def largest_area(lst):
+    """ 直方图最大矩阵覆盖 通过单调栈来解决"""
+    stack = []
+    res, i = 0, 0
+    while i < len(lst):
+        # 存入递增序列的末位
+        if len(stack) == 0 or lst[stack[-1]] < lst[i]:
+            stack.append(i)
+        else:
+            start = stack.pop()
+            width = i if not stack else i-stack[-1]-1 # 获得宽度，通过单调栈中的下标位置计算出来。
+            res = max(res, lst[start]*width) # 计算矩阵大小
+            i -= 1
+        i += 1
+    while stack:
+        start = stack.pop()
+        width = i if not stack else i-stack[-1]-1
+        res = max(res, lst[start]*width)
+    return res
 
+if __name__ == '__main__':
+    print(largest_area([21,2,23,12,25,26,27,15,20]))
 
 
 
