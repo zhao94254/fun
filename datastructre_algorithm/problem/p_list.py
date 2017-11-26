@@ -169,7 +169,32 @@ def trip_rainwater(lst):
             r -= 1
     return res
 
+class NestIter:
+    def __init__(self, nlst):
+        self.nlst = nlst
+
+    def next(self):
+        for i in self.nlst:
+            if isinstance(i, list):
+                pass
+
+    def hasnext(self):
+        pass
+
+def flatten(lst):
+    """多维降为一维"""
+    for i in lst:
+        if isinstance(i, list):
+            yield from flatten(i)
+        else:
+            yield i
+
 if __name__ == '__main__':
+    data = [-5, 10, 5, -3, 1, 1, 1, -2, 3, -4]
+    max_subarray(data)
+    max_x_array(3, data)
+    sub_sum_zero(data)
+    # print(lcs('asdfjshadkjfhkahsdkf', 'asdfjklsadjlfjlskd'))
     print(largest_area([21,2,23,12,25,26,27,15,20]))
     print(trip_rainwater([0,1,0,2,1,0,1,3,2,1,2,1]))
 
@@ -181,10 +206,4 @@ if __name__ == '__main__':
 
 
 
-if __name__ == '__main__':
-    data = [-5,10,5,-3,1,1,1,-2,3,-4]
-    max_subarray(data)
-    max_x_array(3, data)
-    sub_sum_zero(data)
-    # print(lcs('asdfjshadkjfhkahsdkf', 'asdfjklsadjlfjlskd'))
 
