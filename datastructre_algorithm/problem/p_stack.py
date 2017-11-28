@@ -89,6 +89,27 @@ def join_s(s):
             tmp += i
     return res
 
+def find132(s):
+    """
+    判断s中是否有 s[1]<s[3]<s[2]的
+    思路 通过两个栈来保存，一个保存当前位置最小的。一个保存比当前位置大的
+    如果找到一个元素，前面有比它小的
+    """
+    minstack = [0]*len(s)
+    maxstack = []
+    minstack[0] = s[0]
+    for i in range(1, len(s)):
+        minstack[i] = min(minstack[i-1], s[i])
+
+    for j in range(len(s)-1, 0, -1):
+        m = -1111
+        while len(maxstack) > 0 and maxstack[-1] < s[j]:
+            m = maxstack.pop()
+        maxstack.append(s[j])
+        if minstack[j-1]<m:
+            return True
+    return False
+
 def expressionExpand(s):
     # todo bug 0 10 ..
     pass
