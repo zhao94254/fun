@@ -73,26 +73,6 @@ def eval_rpn(lst):
             stack.append(int(i))
     return stack[-1]
 
-def split_express(s):
-    """
-    >>>split_express('5[10[abcd]Ac20[abcde]]')
-    ['[', '5', '[', '10', 'a', 'b', 'c', 'd', ']', 'A', 'c', '[', '20', 'a', 'b', 'c', 'd', 'e', ']', ']']
-    :param s:
-    :return:
-    """
-    res = []
-    tmp = ''
-    for i in s:
-        if i in '1234567890':
-            tmp += i
-        elif i == '[':
-            res.append(int(tmp))
-            res.append('[')
-            tmp = ''
-        else:
-            res.append(i)
-    return res
-
 def join_s(s):
     tmp = ''
     res = []
@@ -127,14 +107,53 @@ def find132(s):
             return True
     return False
 
+def popstack(s):
+    """获取一段字符"""
+    res = ''
+    while len(s) > 0 and not isinstance(s[-1], int):
+        t = s.pop()
+        res += t
+    return res
+
+def split_express(s):
+    """将多位数字分开
+    >>>print(split_express("3[2[ad]3[pf]]1[xyz]"))
+    [3, '[', 2, '[', 'a', 'd', ']', 3, '[', 'p', 'f', ']', ']', 1, '[', 'x', 'y', 'z', ']']
+    """
+    res = []
+    tmp = ''
+    for i in s:
+        if i in '1234567890':
+            tmp += i
+        else:
+            if tmp:
+                res.append(int(tmp))
+                tmp = ''
+            res.append(i)
+    return res
+
 def expressionExpand(s):
-    # todo bug 0 10 ..
-    pass
+    stack = []
+    s = split_express(s)
+    for i in s:
+        if i == "[":
+            pass
+        elif i == ']':
+            t = popstack(stack)
+            c = stack.pop()
+            stack.append(t * c)
+
+        else:
+            stack.append(i)
+    for i in range(len(stack)):
+        stack[i] = stack[i][::-1]
+    return "".join(stack)
 
 
-# data = split_express('2[21[abcd]Ac2[abcde]]')
-# print(data)
-# print(join_s(data))
-# if __name__ == '__main__':
-    # print(valid_parentheses('(()()((()))'))
-    # print(eval_rpn(["-78","-33","196","+","-19","-","115","+","-","-99","/","-18","8","*","-86","-","-","16","/","26","-14","-","-","47","-","101","-","163","*","143","-","0","-","171","+","120","*","-60","+","156","/","173","/","-24","11","+","21","/","*","44","*","180","70","-40","-","*","86","132","-84","+","*","-","38","/","/","21","28","/","+","83","/","-31","156","-","+","28","/","95","-","120","+","8","*","90","-","-94","*","-73","/","-62","/","93","*","196","-","-59","+","187","-","143","/","-79","-89","+","-"]))
+
+    # data = split_express('2[21[abcd]Ac2[abcde]]')
+
+if __name__ == '__main__':
+    print(valid_parentheses('(()()((()))'))
+    print(eval_rpn(["-78","-33","196","+","-19","-","115","+","-","-99","/","-18","8","*","-86","-","-","16","/","26","-14","-","-","47","-","101","-","163","*","143","-","0","-","171","+","120","*","-60","+","156","/","173","/","-24","11","+","21","/","*","44","*","180","70","-40","-","*","86","132","-84","+","*","-","38","/","/","21","28","/","+","83","/","-31","156","-","+","28","/","95","-","120","+","8","*","90","-","-94","*","-73","/","-62","/","93","*","196","-","-59","+","187","-","143","/","-79","-89","+","-"]))
+    print(expressionExpand("3[2[ad]3[pf]]1[xyz]"))
