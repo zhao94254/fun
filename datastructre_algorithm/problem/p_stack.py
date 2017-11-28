@@ -24,6 +24,23 @@ class MinStack:
     def min(self):
         return self.min_stack[-1]
 
+def deltag(s):
+    """ <asdf>阿斯顿付款了<asdf> -->阿斯顿付款了"""
+    res = []
+    stack = []
+    for i in s:
+        if i == "<":
+            stack.append(i)  # 标记是否处于标签内
+        elif i == ">":
+            if len(stack) > 0:
+                stack.pop()
+        else:
+            if len(stack) > 0:  # 处于
+                pass
+            else:
+                res.append(i)
+    return "".join(res)
+
 def valid_parentheses(s):
     """有效的括号序列"""
     stack = []
