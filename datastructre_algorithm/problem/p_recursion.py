@@ -50,3 +50,17 @@ def getfile(filetmp):
                 helper(i)
         return res
     return helper(filetmp)
+
+def permute(s):
+    res = []
+    def helper(s, start):
+        if start >= len(s):
+            res.append(s[:])
+        for i in range(start, len(s)):
+            s[i], s[start] = s[start], s[i]
+            helper(s, start+1)
+            s[i], s[start] = s[start], s[i]
+    helper(s, 0)
+    return res
+
+print(permute([1,2,3]))
