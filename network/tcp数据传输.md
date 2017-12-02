@@ -11,6 +11,24 @@
 
 ![tcp头](http://pyblog-10073407.image.myqcloud.com/postimage1511277046)
 
+#### tcp可靠传输原理
+
+
+#### tcp 流量控制
+
+
+#### tcp 拥塞控制
+
+
+#### bbr算法
+
+
+
+
+
+
+
+
 
 
 #### 什么时候用tcp 什么时候用udp？  
