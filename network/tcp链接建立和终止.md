@@ -101,14 +101,30 @@ tcp中通过这种方式来区分给定序号是新的序号还是重传的序�
 通过时间戳来判断，因为时间戳是递增的。如果收到的数据包是小于当前时间的就直接丢掉。  
 
  
-##### SO_REUSEADDR SO_REUSEPORT？  
+##### SO_REUSEADDR SO_REUSEPORT？
+    
+    这两个选项都要求在一个链接建立的时候就启用这个选项。
+    SO_REUSEADDR 允许进程绑定一个正在用的端口号，但是被绑定的ip没被用。
+    如： 第一个链接绑定到了122.22.22.2 port为5000 第二个可以绑定到 127.0.0.1 port为5000
+    
+    SO_REUSEPORT 允许进程重用ip地址 和 端口 
+    如： 进程A可以绑定 127.0.0.1 5000 进程B也可以绑定之前的这个
 
+SO_REUSEPORT 的好处：  
+在不使用SO_REUSEPORT的时候，处理的方法是用一个监听线程监听所有的链接，然后分发到不同的工作线程，  
+在一些情况下这个线程可能处于瓶颈状态。而且可能任务分配不均匀。  
+启用了这个SO_REUSEPORT 后，链接到达后被均匀分配，每个进程单独监听一条链接。
 
 
 https://stackoverflow.com/questions/14388706/socket-options-so-reuseaddr-and-so-reuseport-how-do-they-differ-do-they-mean-t
 http://rextester.com/BUAFK86204
  
 ##### time wait的影响  
+
+上面提到的time wait状态带来的影响都有对应的解决办法了，但是还是要尽力避免在服务器端主动断开链接。因为当一个非常繁忙的服务器  
+上出现大量的time wait的链接时，这些链接会占用不少的系统资源。网络这块的吞吐可能不会那么高，所以需要将这个压力来分发到  
+客户端。让客户端这里来主动断开，减轻这个压力。
+  
 参见 https://www.isi.edu/touch/pubs/infocomm99/ 
   
 
