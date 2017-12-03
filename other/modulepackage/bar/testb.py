@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # @Author  : pengyun
 
-from ..foo import testf
-x = 'foo'
+from . import export
 
-def test(x):
-    print(x)
+@export
+class A:
+    pass
 
-test(x)
+class B:
+    pass
 
-print(__name__)
+class C:
+    pass
 
 
 

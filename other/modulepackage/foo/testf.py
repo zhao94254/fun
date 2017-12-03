@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 # @Author  : pengyun
 
-from ..bar.testb import test
+import weakref
+from .. import
 
-x = 'foo'
+class Spam:
+    if 'Spam' in globals():
+        _instance = Spam._instance
+    else:
+        _instance = weakref.WeakSet()
 
-def test(x):
-    print(x)
+    def __init__(self):
+        Spam._instance.add(self)
 
-test(x)
+    def yow(self):
+        print("new yow")
+

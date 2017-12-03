@@ -126,13 +126,143 @@
 每个人去开发一个功能 开发效率会提升很多。但是如果是在一个文件中，多个人一起开发的时候  
 光来回修改 来回查找代码就很痛苦了。  
 
+模块控制  
+
+    # foo.py
+    __all__ = ['Foo']
+    class Foo(object):
+        pass
+        
+    # bar.py
+    __all__ = ['Bar']
+    class Bar(object):
+        pass
+    
+    __all__ 中定义了那些， 那些就可以被 from xx import * 导入  
+    
+    # __init__.py
+    from .foo import *
+    from .bar import *
+    __all__ = (foo.__all__ + bar.__all__)
+    
+    # asyncio 是一个很好的例子。
+    
+也可以通过装饰器来实现  
+
+    # spam/__init__.py
+    __all__ = []
+    def export(defn):
+        globals()[defn.__name__] = defn
+        __all__.append(defn.__name__)
+        return defn
+        
+    from . import foo
+    @export
+    class A:
+        pass 
+    上面的方法等同于 __all__ = ['A']
+
+pathonpath 环境变量
+env pythonpath=/foo:/bar python3 -s  
+这样子就把需要添加的路径加入了sys.path  
+    
+    # 模块的属性
+    __name__ # Module name
+    __file__  # Associated source file (if any)
+    __doc__ # Doc string
+    __path__ # Package path
+    __package__ # Package name
+    __spec__ # Module spec
+
+要注意循环引用  
+    
+    # foo.py
+    import bar
+    # bar.py
+    import bar
+    
+再谈reload。
+    
+    # before
+    # testf.py
+    class Spam:
+        def yow(self):
+            print("yow")
+    import testf
+    a=testf.Spam()
+    
+    class Spam:
+        def yow(self):
+            print("new yow")
+    
+    reload(spam)
+    b = testf.Spam()
+    a.yow() # yow
+    b.yow() # new yow
+    
+    上面已经存在的a 的实例用的还是之前的。
+    b则是新的  
+    >>> a.__class__
+    <class 'foo.testf.Spam'>
+    >>> b.__class__
+    <class 'foo.testf.Spam'>
+    >>> type(a)
+    <class 'foo.testf.Spam'>
+    >>> type(b)
+    <class 'foo.testf.Spam'>
+    >>> type(a) == type(b)
+    False
+    
+这也是为什么要尽量避免使用reload的原因。
 
 
+#### 模块寻找  
+
+    使用 imporlib.util.find_spec 
     
+    def find_spec(modname):
+        for imp in sys.meta_path:
+            spec = imp.find_spec(modname)
+            if spec:
+                return spec
+        return None
     
-    
-    
-    
+    find_spec('sys')
+    find_spec('socket')
+
+**在好多库里能看到这种写法**  
+
+    try:
+        __import__('watchdog.observers')
+    except ImportError:
+        reloader_loops['auto'] = reloader_loops['stat']
+    else:
+        reloader_loops['auto'] = reloader_loops['watchdog']
+     
+    先去寻找 watchdog.observers 如果没找到就去找其它的。
+
+
+#### 通过一些方法还可以使代码从远程加载，或者从redis中加载。  
+
+
+#### 如何将文件夹加入到sys.path  
+
+在写程序的时候经常要导入一些我们自己的文件，有两种方法可以  
+1. 添加新目录到pythonpath 的环境变量中  
+2. 创建一个.pth 的文件，放在site-packages中。  
+
+也可以写代码来手动调节这个sys.path 的值。  
+
+    import sys
+    sys. path. insert(0, ' /some/dir' )
+    sys. path. insert(0, ' /other/dir' )
+
+上面这种方法是行得通的。但是在实践的时候难免会遇到需要修改的情况。这时这样就不是一个  
+好的选择。更好的做法是将这些path配置在一个文件中，或者构造一个合适的绝对路径。  
+
+
+
+
     
     
     
