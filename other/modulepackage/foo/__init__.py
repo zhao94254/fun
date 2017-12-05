@@ -8,5 +8,4 @@ def export(defn):
     __all__.append(defn.__name__)
     return defn
 
-from . import testb
-
+from . import testf

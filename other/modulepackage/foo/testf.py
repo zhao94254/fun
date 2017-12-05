@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # @Author  : pengyun
-
+from . import export
 import weakref
-from .. import
 
+@export
 class Spam:
     if 'Spam' in globals():
         _instance = Spam._instance

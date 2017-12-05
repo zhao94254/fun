@@ -2,6 +2,10 @@
 # @Author  : pengyun
 
 from . import export
+from .foo import *
+
+s  = Spam()
+print(s)
 
 @export
 class A:
