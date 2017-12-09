@@ -246,6 +246,18 @@ def reverse1(link):
 
     return res
 
+def insert_sort(link):
+    """思路就是 先将链表制空，然后保存当前的"""
+    h = Linklist(0) # 头节点
+    while link:
+        tmp = h # 工作指针
+        _n = link.next # 保存当前待排序节点
+        while tmp.next and tmp.next.val < link.val: # 确保tmp中的都是比当前待排序节点大的
+            tmp = tmp.next
+        link.next = tmp.next # 将当前节点增加到已排序的tmp中
+        tmp.next = link # tmp增加
+        link = _n # 指回待排序节点
+    return h.next
 
 if __name__ == '__main__':
     a = list_to_link([9, 9, 9])
