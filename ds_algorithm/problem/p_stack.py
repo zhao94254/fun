@@ -27,7 +27,7 @@ class MinStack:
 
 
 def deltag(s):
-    """ <asdf>阿斯顿付款了<asdf> -->阿斯顿付款了"""
+    """ 去除标签 <asdf>阿斯顿付款了<asdf> -->阿斯顿付款了"""
     res = []
     stack = []
     for i in s:

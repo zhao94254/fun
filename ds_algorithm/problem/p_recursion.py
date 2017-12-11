@@ -50,6 +50,7 @@ def getfile(filetmp):
     return helper(filetmp)
 
 def permute(s):
+    """全排列"""
     res = []
     def helper(s, start):
         if start >= len(s):

@@ -8,7 +8,7 @@
 
 
 def two_sum(numbers, target):
-    """
+    """ 两数相加
         @param numbers : An array of Integer
         @param target : target = numbers[index1] + numbers[index2]
         @return : [index1 + 1, index2 + 1] (index1 < index2)
@@ -21,7 +21,7 @@ def two_sum(numbers, target):
     return []
 
 def three_sum(numbers, target):
-    """ three sum 同上面的二数之和"""
+    """ 三数相加"""
     for i, num in enumerate(numbers):
         f = target - num
         res = two_sum(numbers[i+1:], f)
@@ -30,9 +30,8 @@ def three_sum(numbers, target):
     return []
 
 
-
-
-# print(two_sum([0,4,3,0], 0))
-# print(three_sum(list(range(10)), 6))
+if __name__ == '__main__':
+    print(two_sum([0,4,3,0], 0))
+    print(three_sum(list(range(10)), 6))
 
 

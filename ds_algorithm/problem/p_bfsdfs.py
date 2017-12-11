@@ -35,6 +35,7 @@ def b_inject(arr, i, j, n, m):
 
 
 def count_lands(data):
+    """岛屿统计，统计一个01数组中1构成的岛屿数量"""
     res = 0
     n, m = len(data), len(data[0])
     for i in range(n):

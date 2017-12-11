@@ -18,6 +18,7 @@ def unique_s(s):
 
 def is_rotate(s1, s2):
     """
+    变位词判断
     >>>is_rotate('12345', '34512')
     True
     :param s1:
@@ -29,6 +30,7 @@ def is_rotate(s1, s2):
     return False
 
 def anagrams(lst):
+    """乱序字符串"""
     def sort_str(s):
         return ''.join(sorted(list(s)))
     _map = {}
@@ -60,7 +62,7 @@ def lcp(strs):
 
 if __name__ == '__main__':
 
-    # print(anagrams(['lint','inlt','intl','fkkk']))
+    print(anagrams(['lint','inlt','intl','fkkk']))
     print(lcp(['abcd','abcdd','abe']))
 
 
