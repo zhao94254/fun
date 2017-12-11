@@ -56,6 +56,8 @@ def getfunc(path, name):
         res = find_function(module, name)
         if len(res) > 0:
             pprint.pprint(res)
+            return
+    return
 
 if __name__ == '__main__':
     getfunc('/Users/mioji/Desktop/py/github/fun/ds_algorithm', "背包")

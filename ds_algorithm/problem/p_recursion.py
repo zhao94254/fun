@@ -61,4 +61,5 @@ def permute(s):
     helper(s, 0)
     return res
 
-print(permute([1,2,3]))
+if __name__ == '__main__':
+    print(permute([1,2,3]))

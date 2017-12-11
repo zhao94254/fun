@@ -9,7 +9,8 @@ from units import getfunc
 import argparse
 
 
-getfunc('/Users/mioji/Desktop/py/github/fun/ds_algorithm', '三数')
+if __name__ == '__main__':
+    getfunc('/Users/mioji/Desktop/py/github/fun/ds_algorithm', '背包')
 
 
 

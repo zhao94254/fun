@@ -4,7 +4,7 @@
 # @Author  : zpy
 # @Software: PyCharm
 
-from ds_algorithm.datastructre.stream import Stream
+from datastructre.stream import Stream
 
 def integer_stream(first):
     return Stream(first, lambda : integer_stream(first+1))
