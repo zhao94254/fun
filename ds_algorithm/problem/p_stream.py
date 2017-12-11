@@ -3,10 +3,8 @@
 # @Created on    : 17/11/22 上午9:35
 # @Author  : zpy
 # @Software: PyCharm
-import sys
-sys.path.append("..")
 
-from data_structre.stream import Stream
+from ds_algorithm.datastructre.stream import Stream
 
 def integer_stream(first):
     return Stream(first, lambda : integer_stream(first+1))

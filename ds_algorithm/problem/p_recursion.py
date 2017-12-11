@@ -4,8 +4,6 @@
 # @Author  : zpy
 # @Software: PyCharm
 
-import os
-
 
 def move_stack(n, start, end, tmp):
     """汉诺塔 理解递归&栈"""
