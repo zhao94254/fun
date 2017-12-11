@@ -4,7 +4,7 @@
 # @Author  : zpy
 # @Software: PyCharm
 
-from ds_algorithm.datastructre.tree import BinTree
+from datastructre.tree import BinTree
 
 def is_symmetrical(tree1, tree2):
     """检查两个树是否互为镜像树"""
