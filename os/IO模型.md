@@ -13,15 +13,47 @@
 #### 常用的io模型  
 
 阻塞IO  
+![阻塞IO](http://pyblog-10073407.image.myqcloud.com/postimage1513041595?imageView2/0/w/450/h/400)  
+阻塞io就是当前进程一直在等待io响应，当响应不返回就一直在当前位置等待。  
 
 非阻塞IO  
+![非阻塞IO](http://pyblog-10073407.image.myqcloud.com/postimage1513041599?imageView2/0/w/450/h/400)
+上图时一种轮训的模型，需要时不时去看是否有数据准备好了。  
 
 信号驱动IO  
+![信号驱动](http://pyblog-10073407.image.myqcloud.com/postimage1513041592?imageView2/0/w/450/h/400)
+
+当一个io时间发生时，请求直接返回。只有当数据到达时，通过信号来告诉应用程序，将数据拷贝到应用缓冲。  
 
 
 IO复用（select poll epoll）  
+![io复用](http://pyblog-10073407.image.myqcloud.com/postimage1513041601?imageView2/0/w/450/h/400)  
+io复用是阻塞在select 或者 poll 或者 epoll 上，类似于拨片开关，可以同时处理很多条链接。
 
 异步IO（aio）  
+![异步io](http://pyblog-10073407.image.myqcloud.com/postimage1513041587?imageView2/0/w/450/h/400)
+
+和上面信号驱动的区别在于异步io是通知我们io操作何时完成的。信号驱动告诉我们的时io操作何时开始。  
+
+
+![区别](http://pyblog-10073407.image.myqcloud.com/postimage1513042930?imageView2/0/w/450/h/400)
+
+
+同步io 和 异步 io  
+
+同步io操作引起请求进程阻塞，直到io完成。  
+异步io不会使进程阻塞。  
+
+也就是说上面的模型除了最后的异步IO是真正的异步IO。上面的信号驱动的IO可能看起来像异步的IO，但是在读取  
+数据的时候是由应用进程阻塞去读取的。  
+
+
+
+
+
+
+
+
 
 
 
