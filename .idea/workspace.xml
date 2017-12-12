@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="900f9d27-5701-43cf-af1e-5177bd509335" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/os/aecho.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/os/aplay.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/os/echo.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/os/IO模型.md" afterPath="$PROJECT_DIR$/os/IO模型.md" />
     </list>
@@ -29,8 +26,8 @@
         <entry file="file://$PROJECT_DIR$/os/IO模型.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="0">
-                <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+              <first_editor relative-caret-position="364">
+                <caret line="67" column="4" lean-forward="true" selection-start-line="67" selection-start-column="4" selection-end-line="67" selection-end-column="4" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -77,8 +74,8 @@
         <option value="$PROJECT_DIR$/ds_algorithm/units.py" />
         <option value="$PROJECT_DIR$/os/aplay.py" />
         <option value="$PROJECT_DIR$/os/aecho.py" />
-        <option value="$PROJECT_DIR$/os/IO模型.md" />
         <option value="$PROJECT_DIR$/os/echo.py" />
+        <option value="$PROJECT_DIR$/os/IO模型.md" />
       </list>
     </option>
   </component>
@@ -89,9 +86,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="403" />
-    <option name="y" value="17" />
-    <option name="width" value="1318" />
+    <option name="x" value="550" />
+    <option name="y" value="21" />
+    <option name="width" value="1308" />
     <option name="height" value="977" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -286,7 +283,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="403" y="17" width="1318" height="977" extended-state="0" />
+    <frame x="550" y="21" width="1308" height="977" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -296,7 +293,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32918552" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22137405" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17938311" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.072013095" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3995381" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -721,8 +718,8 @@
     <entry file="file://$PROJECT_DIR$/os/IO模型.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="0">
-            <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+          <first_editor relative-caret-position="364">
+            <caret line="67" column="4" lean-forward="true" selection-start-line="67" selection-start-column="4" selection-end-line="67" selection-end-column="4" />
             <folding />
           </first_editor>
           <second_editor />
