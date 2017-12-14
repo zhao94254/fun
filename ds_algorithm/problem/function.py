@@ -63,7 +63,19 @@ def mulitipy(a, b):
             res[i] = res[i] % 10
     return res
 
-
+def swap_(x, n):
+    """不使用辅组空间将x中的元素按照n划分"""
+    if n not in x:
+        print("....")
+        return
+    l = 0
+    for i in range(len(x)):
+        if x[i] < n:
+            x[i], x[l] = x[l], x[i]
+            l += 1
+    k = x.index(n)
+    x[k], x[l] = x[l], x[k]
+    print(x, l, n)
 
 
 
