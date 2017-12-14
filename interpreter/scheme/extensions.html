@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Scheme Interpreter Extensions</title>
+</head>
+
+<body>
+  <h2>Scheme Interpreter Extensions</h2>
+
+  <p>There are many ways to extend our Scheme interpreter. A few suggestions are
+  below, and the <a href=
+  "http://en.wikipedia.org/wiki/Scheme_%28programming_language%29">Wikipedia</a>
+  page for Scheme is a good place to start to learn more about the language
+  itself.</p>
+
+  <p>We recommend that you submit the final version of your project before
+  attempting any of these extensions. <b>We are not responsible if you break the
+  required components of your interpreter and Scheme code.</b></p>
+
+  <h3>Variable Arguments</h3>
+
+  <p>Many Scheme implementations allow procedures to take in a variable number
+  of arguments, which get placed into a list before being bound to a parameter.
+  (Compare to Python, where variable arguments are placed into a tuple.) This is
+  specified by preceding the last parameter with a dot (much like
+  Python's <code>*</code>):</p>
+
+  <pre>
+    scm&gt; (define (add . args) (apply + args))
+    add
+    scm&gt; (add 3 7 2 1)
+    13
+  </pre>
+
+  <p>Recall that a dot is used to specifiy the second component of a pair. Thus,
+  formal lists can now be ill-formed.</p>
+
+  <p>In order to implement this, you will need to change the following:
+  <ul>
+    <li><code>check_formals</code> should not reject a formal list that is just
+      a symbol or terminated by a symbol rather than <code>nil</code>.
+    <li><code>Frame.make_call_frame</code> should bind the remaining list of
+      values to the symbol that terminates <code>formals</code>, if it is not
+      terminated by <code>nil</code>.
+  </ul></p>
+
+  <h3>Quasiquote and Unquote</h3>
+
+  <p>Quoting prevents the interpreter from evaluating an expression. Often times,
+  we might want to evaluate part of an expression but not the rest. For example,
+  the following constructs a list containing the symbol <code>a</code> and its
+  value:</p>
+
+  <pre>
+    scm&gt; (define a 3)
+    a
+    scm&gt; `(a , a)
+    (a 3)
+  </pre>
+
+  <p>The backquote (<code>`</code>) specifies a <emph>quasiquote</emph>, which
+  can evaluate parts of an expression. A comma (<code>,</code>) is
+  an <emph>unquote<emph>, which specifies that the next expression should be
+  evaluated. Finally, a comma followed by an at symbol (<code>,@</code>) is
+  an <emph>unquote-splicing</emph>, meaning that it evaluates the next
+  expression, which must evaluate to a list, and then splices that list into the
+  result:</p>
+
+  <pre>
+    scm&gt; `(a ,@ '(1 2 3) 4)
+    (a 1 2 3 4)
+  </pre>
+
+  <p>Quasiquotes can be nested, and an unquoted expression should only be
+  evaluated if it is at the same nesting level as the outermost quasiquote. The
+  nesting level increases by one in each quasiquotation and decreases by one in
+  each unquote/unquote-splicing.</p>
+
+  <p>Here are some examples from the Scheme R5RS reference manual:</p>
+
+  <pre>
+    scm&gt; `(list  ,(+ 1 2)  4)
+    (list 3 4)
+
+    scm&gt; (let ((name 'a)) `(list ,name ',name))
+    (list a (quote a))
+
+    scm&gt; `(( foo ,(- 10 3)) ,@(cdr '(c)) . ,(car '(cons)))
+    ((foo 7) . cons)
+
+    scm&gt; `(a `(b ,(+ 1 2)  ,(foo ,(+ 1 3)  d)  e)  f)
+    (a (quasiquote (b (unquote (+ 1 2)) (unquote (foo 4 d)) e)) f)
+
+    scm&gt; (let ((name1 'x)
+               (name2 'y))
+           `(a `(b ,,name1  ,',name2 d)  e))
+    (a (quasiquote (b (unquote x) (unquote (quote y)) d)) e)
+  </pre>
+
+  <p>The tokenizer already handles quasiquotes and unquotes. However, you will
+  need to modify <code>scheme_read</code> to handle them as well, like you did
+  for normal quoting. Use the
+  strings <code>"quasiquote"</code>, <code>"unquote"</code>,
+  and <code>"unquote-splicing"</code>, respectively.</p>
+
+  <p>In addition, the following changes are required:
+  <ul>
+    <li>Add a case in <code>scheme_eval</code>
+      and/or <code>scheme_optimized_eval</code> for <code>"quasiquote"</code>:
+      call a new <code>do_quasiquote_form</code> function. You may also want
+      to check for <code>"unquote"</code> and <code>"unquote-splicing"</code>
+      here, raising an error that they are being used outside of a quasiquote.
+    <li>You will need to process a quasiquote recursively. If a value is a list
+      that starts with either unquote at the right nesting level, then the list
+      should contain only one more value, which should be evaluated in the
+      current environment and returned. Otherwise the value should be returned
+      without being evaluated.
+    <li>Splicing is a bit more complicated, since the splicing needs to be done
+      by the caller. You may want to add another return value to specify whether
+      or not splicing should be done. Use <code>scheme_append</code> to actually
+      do the splicing.
+  </ul></p>
+
+  <h3>Macro Definition</h3>
+
+  <p>Macros allow the language itself to be extended by the user. Simple macros
+  can be provided with the <code>define-macro</code> special form. This must be
+  used like a function definition, and it creates a procedure just
+  like <code>define</code>. However, this procedure has a special evaluation
+  rule: it is applied to its arguments without first evaluating them. Then the
+  result of this application is evaluated.</p>
+
+  <p>Here is a simple example:</p>
+
+  <pre>
+    scm&gt; (define-macro (when test . branch)
+           (list 'if test (cons 'begin branch)))
+    when
+    scm&gt; (when (< 3 4)
+            (print 1)
+            (print 2))
+    1
+    2
+    okay
+  </pre>
+
+  <p>The code above defines a macro <code>when</code> that evaluates all the
+  expressions in its body when the predicate expression is true. (You'll need to
+  have implemented variable argument lists for this particular example to
+  work.)</p>
+
+  <p>In order to implement <code>define-macro</code>, add a <code>macro</code>
+  parameter to <code>do_define_form</code>, with a default value
+  of <code>False</code>. If <code>macro</code> is true, raise an error if
+  function definition shorthand is not used. Otherwise, mark the resulting
+  procedure as a macro. (There are many ways to do this; one way is to use an
+  instance attribute.)</p>
+
+  <p>In <code>scheme_eval</code>, add a case for <code>"define-macro"</code>
+  that calls <code>do_define_form</code> with <code>macro</code> as true. Then
+  modify the procedure handling code to check if a procedure is a macro. In that
+  case, it should apply the procedure directly to the arguments without
+  evaluating them first. It should then evaluate and return the result.</p>
+
+  <h3>Mutation</h3>
+
+  <p>Like Python, Scheme has non-local assignment. In particular,
+  the <code>set!</code> special form takes in a name and another expression and
+  rebinds that name to the value of the expression in the first frame in which
+  the name exists. Unlike Python, this frame can be the local or global
+  frame.</p>
+
+  <p>In order to implement <code>set!</code>, add a method to <code>Frame</code>
+  that rebinds a name to a new value in the first frame in which the name is
+  found. An error should be raised if the name does not exist in any frame. You
+  will also need to add a <code>do_set_form</code> function and a case for
+  <code>set!</code> in <code>scheme_eval</code>.</p>
+
+  <p>Pairs can be mutated using <code>set-car!</code> and <code>set-cdr!</code>
+  These can be easily implemented as primitive procedures
+  in <code>scheme_primitives.py</code>.</p>
+
+  <h3>Library Code</h3>
+
+  <p>Many standard Scheme procedures can be implemented in Scheme itself, as
+  library code. Add a mechanism to your interpreter to load up a library file on
+  startup (e.g. <code>scheme_lib.scm</code>). Then provide useful procedures in
+  <code>scheme_lib.scm</code>, such as <code>map</code>, <code>filter</code>,
+  and <code>c*r</code> variants up to four applications of <code>car</code>
+  or <code>cdr</code>.</p>
+
+  <h3>Error Handling</h3>
+
+  <p>Currently, when an error occurs while attempting to evaluate an expression,
+  the interpreter only prints out an error message, with no backtrace. This
+  makes it difficult to determine the source of an error.</p>
+
+  <p>In order to provide a useful backtrace, start by adding names to primitive
+  procedures and procedures defined using the special <code>define</code> syntax.
+  Use default names, such as <code>[lambda]</code>, for procedures with unknown
+  names.</p>
+
+  <p>Now write a new function to handle an exception and call it from the first
+  except clause in <code>read_eval_print_loop</code>. A Python exception
+  contains information about every frame between the one that raised the
+  exception and the one that handled it. If <code>e</code> is an exception,
+  then <code>e.__traceback__</code> is a <code>traceback</code> object that
+  contains this information. A <code>traceback</code> is a recursive list
+  of <code>frame</code>s. Read more about <code>traceback</code>,
+  <code>frame</code>, and <code>code</code> objects
+  <a href="http://docs.python.org/3.2/reference/datamodel.html">here</a>.</p>
+
+  <p>A Python exception contains information at the Python level, but a user is
+  interested in information at the Scheme level. So you should translate the
+  Python-level information to Scheme-level information by extracting the latter
+  from a <code>frame</code>. You can read the local variables in
+  a <code>frame</code>, and you can obtain its associated <code>code</code>
+  object to get the name of the Python function for that <code>frame</code>.<p>
+
+  <p>Some suggestions on what to do with a Python frame:
+  <ul>
+    <li>If the frame corresponds to <code>scheme_apply</code>, then add an
+    entry to your Scheme trace for the associated procedure call. Use the
+    name attribute that you added previously, and include the arguments.
+
+    <p>If you did the tail recursion optimization, you will not
+    call <code>scheme_apply</code>. Instead, keep track of the last known
+    procedure call in <code>scheme_optimized_eval</code>, and add an entry for
+    that to your Scheme trace when the frame corresponds
+    to <code>scheme_optimized_eval</code>.
+    <li>If the frame corresponds to a <code>do_*_form</code> function, then
+    add an entry to your Scheme trace with the name of the form and its original
+    arguments.
+    <li>Number the entries in your trace and display them in whichever order you
+    prefer.
+  </ul>
+
+  <p>Here are some sample traces without the tail recursion optimization:</p>
+
+  <pre>
+    scm&gt; (define (foo x) (/ 1 x))
+    foo
+    scm&gt; (define (bar x) (foo x) 3)
+    bar
+    scm&gt; (define (baz x) (if (= x 0) (bar x) (baz (- x 1))))
+    baz
+    scm&gt; (foo 0)
+    Traceback (most recent call last):
+      0     (foo 0)
+      1     (/ 1 0)
+    Error: division by zero
+    scm&gt; (bar 0)
+    Traceback (most recent call last):
+      0     (bar 0)
+      1     (#begin (foo x) 3)
+      2     (foo 0)
+      3     (/ 1 0)
+    Error: division by zero
+    scm&gt; (baz 3)
+    Traceback (most recent call last):
+      0     (baz 3)
+      1     (baz 2)
+      2     (baz 1)
+      3     (baz 0)
+      4     (bar 0)
+      5     (#begin (foo x) 3)
+      6     (foo 0)
+      7     (/ 1 0)
+    Error: division by zero
+  </pre>
+
+  <p>With the tail recursion optimization:</p>
+
+  <pre>
+    scm&gt; (foo 0)
+    Traceback (most recent call last):
+      0     (foo 0)
+      1     (/ 1 0)
+    Error: division by zero
+    scm&gt; (bar 0)
+    Traceback (most recent call last):
+      0     (bar 0)
+      1     (#begin (foo x) 3)
+      2     (foo 0)
+      3     (/ 1 0)
+    Error: division by zero
+    scm&gt; (baz 3)
+    Traceback (most recent call last):
+      0     (bar 0)
+      1     (#begin (foo x) 3)
+      2     (foo 0)
+      3     (/ 1 0)
+    Error: division by zero
+  </pre>
+
+  <h3>Further Extensions</h3>
+
+  <p>Feel free to implement any other features of Scheme that you want. You can
+  read the full reference manual
+  <a href="http://www.schemers.org/Documents/Standards/R5RS/r5rs.pdf">here</a>.
+  Examples include named
+  lets, <code>let*</code>, <code>letrec</code>, <code>do</code> loops, strings,
+  and vectors. (If you really want a challenge, then try to
+  implement <code>call-with-current-continuation</code>, which isn't even
+  handled correctly by STk.) How close can you get to what STk provides?</p>
+
+</body>
+</html>
