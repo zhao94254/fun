@@ -7,6 +7,21 @@ import logging
 import signal
 import code
 
+def retry(times=3):
+    def wrap(func):
+        def do(*args, **kwargs):
+            t = times
+            res = None
+            while t > 0:
+                try:
+                    res = func(*args, **kwargs)
+                    break
+                except Exception:
+                    t -= 1
+            return res
+        return do
+    return wrap
+
 
 def timeit(func):
     """统计函数运行时间"""
