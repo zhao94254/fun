@@ -46,6 +46,48 @@ def count_lands(data):
                 # d_inject(data, i, j, n, m)
     return res
 
+def d_json(data, key):
+    """通过key 来寻找json中对应的数据。 dfs版本"""
+    res = []
+    def help(data, key):
+        if isinstance(data, dict):
+            for k in data.keys():
+                if k == key:
+                    res.append(data[k])
+                else:
+                    if isinstance(data[k], dict):
+                        help(data[k], key)
+                    if isinstance(data[k], list):
+                        for i in data[k]:
+                            help(i, key)
+        elif isinstance(data, list):
+            for i in data:
+                help(i, key)
+    help(data, key)
+
+    return len(res), res
+
+def b_json(data, key):
+    """通过key 来寻找json中对应的数据。 bfs版本"""
+    queue = [data]
+    res = []
+    while len(queue) > 0:
+        f = queue.pop(0)
+        if isinstance(f, dict):
+            for k in f.keys():
+                if k == key:
+                    res.append(f[k])
+                elif isinstance(f[k], dict):
+                    queue.append(f[k])
+                elif isinstance(f[k], list):
+                    queue.extend(f[k])
+                else:
+                    pass
+        elif isinstance(f, list):
+            queue.extend(f)
+    return res, len(res)
+
+
 if __name__ == '__main__':
     data = [
       [1, 1, 0, 0, 0],
