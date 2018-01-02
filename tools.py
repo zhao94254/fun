@@ -6,6 +6,23 @@ import sys
 import logging
 import signal
 import code
+import os
+
+def getfile(path, end=None):
+    """获取指定路径下的所有文件"""
+    res = []
+    def helper(path):
+        for i in os.listdir(path):
+            i = os.path.join(path, i)
+            if os.path.isfile(i):
+                if end and i.endswith(end):
+                    res.append(i)
+                elif end is None:
+                    res.append(i)
+            else:
+                helper(i)
+    helper(path)
+    return res
 
 def retry(times=3):
     def wrap(func):
