@@ -43,8 +43,22 @@ class RedisImporter:
             loader = RedisLoader(origin, self.connection)
             return importlib.util.spec_from_loader(name, loader)
 
+
 def enable(*args, **kwargs):
     import sys
     sys.meta_path.insert(0, RedisImporter(*args, **kwargs))
 
 
+def server_import(name, path):
+    """从远程导入。。。"""
+    enable()
+    name += '.py'
+    import requests
+    r = redis.Redis()
+    r.set(name, requests.get(path).json()['code'])
+
+if __name__ == '__main__':
+
+    server_import('itest', 'https://www.yunxcloud.cn/api/v1/code/33')
+    import itest
+    itest.getfile('/User/test/py')
