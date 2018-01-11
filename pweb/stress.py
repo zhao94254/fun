@@ -11,16 +11,18 @@ import redis
 from multiprocessing.pool import Pool, ThreadPool
 from multiprocessing import Process
 import signal
+import collections
+
 
 redis_db = redis.Redis()
 
 PRE = 'stress:test:'
 NAME = 'flask'
 
-STRESS_RATES = PRE + '{}:rates'.format(NAME) #
 SUCCESS_KEY = PRE + '{}:success'.format(NAME)
 FAILURE_KEY = PRE + '{}:failure'.format(NAME)
 TIME_KEY = PRE + '{}:time'.format(NAME)
+RATES = PRE + '{}:rates'.format(NAME)
 
 class BaseQuery:
     """
@@ -50,16 +52,6 @@ class BaseQuery:
         rate = success_check / all_check
         return rate == 1, rate
 
-
-class SimpleTest(BaseQuery):
-
-    def check_a(self):
-        return int(time.time()) % 2
-
-    def check_b(self):
-        return int(time.time()) % 8
-
-
 def job(queue):
     """
     保存单个任务花费时间， 成功数量， 单个任务成功率
@@ -72,14 +64,15 @@ def job(queue):
         ok, rate = q.check()
     except:
         ok, rate = False, 0
+
     end = time.time()
     cost = end - start
     with redis_db.pipeline() as p:
         if ok:
             p.incr(SUCCESS_KEY)
-            p.lpush(STRESS_RATES, rate)
         else:
             p.incr(FAILURE_KEY)
+        p.lpush(RATES, rate)
         p.lpush(TIME_KEY, cost)
         p.execute()
 
@@ -115,10 +108,9 @@ def progress():
             time.sleep(1)
             cur = get_value_num(SUCCESS_KEY)
 
-            msg = "Orders Per Second: {:4d}/s".format(cur - prev)
+            msg = "Per Second: {:4d}/s".format(cur - prev)
             print(msg, end='')
             print('\r' * len(msg), end='')
-
             prev = cur
 
     except KeyboardInterrupt:
@@ -127,7 +119,7 @@ def progress():
         print('\n')
 
 
-def work(processes, threads, times):
+def work(task, processes, threads, times):
     pool = Pool(processes,
                 lambda: signal.signal(signal.SIGINT, signal.SIG_IGN))
     p = Process(target=progress)
@@ -136,7 +128,7 @@ def work(processes, threads, times):
     start = time.time()
     try:
         for chunk in divide(times, processes):
-            pool.apply_async(thread, (threads, SimpleTest, chunk))
+            pool.apply_async(thread, (threads, task, chunk))
 
         p.start()
 
@@ -154,15 +146,31 @@ def work(processes, threads, times):
     return time.time() - start
 
 
-def report():
+def report(processes, threads, name):
     success = get_value_num(SUCCESS_KEY)
     failure = get_value_num(FAILURE_KEY)
-    rates = get_range_num(STRESS_RATES)
-    print(success, failure, rates)
+    rates = get_range_num(RATES)
+
+    print('-' * 15 + name + '-' * 15)
+    print("Stats")
+    print("Concurrent Level:      ", processes, 'X', threads )
+    print("Success                ", success)
+    print("Failure                ", failure)
+    print(rates)
+    count  = collections.Counter(rates)
+    for c in count:
+        print(" {:>4.0%}      ".format(c), count[c])
+
+
+class SimpleTest(BaseQuery):
+
+    def check_a(self):
+        return True
+
+    def check_b(self):
+        return False
 
 if __name__ == '__main__':
-    # q = BaseQuery('x')
-    # print(q.check())
-    # print(divide(99, 8))
-    # work(2, threads=8, times=128)
-    # report()
+
+    work(SimpleTest, 2, threads=8, times=128)
+    report(2, 8, 'x')
