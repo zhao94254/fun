@@ -138,10 +138,10 @@ def work(task, processes, threads, times):
         p.join()
 
     except KeyboardInterrupt:
-        pool.terminate()
+        # pool.terminate()
         p.terminate()
         p.join()
-        pool.join()
+        # pool.join()
 
     return time.time() - start
 
@@ -156,7 +156,6 @@ def report(processes, threads, name):
     print("Concurrent Level:      ", processes, 'X', threads )
     print("Success                ", success)
     print("Failure                ", failure)
-    print(rates)
     count  = collections.Counter(rates)
     for c in count:
         print(" {:>4.0%}      ".format(c), count[c])
@@ -170,7 +169,23 @@ class SimpleTest(BaseQuery):
     def check_b(self):
         return False
 
+class TestFalsk(BaseQuery):
+    """Simple test"""
+    def __init__(self):
+        super().__init__()
+        self.url = 'http://127.0.0.1:5000'
+
+    def check_get(self):
+        return self.session.get(self.url).status_code == 200
+
+    def check_post(self):
+        data = {
+            'data': 'test',
+        }
+        return self.session.post(self.url+'/post', data=data).status_code == 200
+
+
 if __name__ == '__main__':
 
-    work(SimpleTest, 2, threads=8, times=128)
+    print(work(TestFalsk, 2, threads=8, times=128))
     report(2, 8, 'x')
