@@ -5,8 +5,10 @@
 # @Software: PyCharm
 
 from flask import Flask, request, redirect, url_for
+from flask_common import Common
 
 app = Flask(__name__)
+common = Common(app)
 
 @app.route('/')
 def index():
@@ -23,6 +25,6 @@ def test_redirect():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
+    # app.run(debug=True)
+    common.serve()
 

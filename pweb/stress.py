@@ -146,7 +146,7 @@ def work(task, processes, threads, times):
     return time.time() - start
 
 
-def report(processes, threads, name):
+def report(processes, threads, name, pre):
     success = get_value_num(SUCCESS_KEY)
     failure = get_value_num(FAILURE_KEY)
     rates = get_range_num(RATES)
@@ -156,6 +156,7 @@ def report(processes, threads, name):
     print("Concurrent Level:      ", processes, 'X', threads )
     print("Success                ", success)
     print("Failure                ", failure)
+    print("Qps                    ", pre)
     count  = collections.Counter(rates)
     for c in count:
         print(" {:>4.0%}      ".format(c), count[c])
@@ -173,7 +174,7 @@ class TestFalsk(BaseQuery):
     """Simple test"""
     def __init__(self):
         super().__init__()
-        self.url = 'http://127.0.0.1:5000'
+        self.url = 'http://127.0.0.1:8000'
 
     def check_get(self):
         return self.session.get(self.url).status_code == 200
@@ -185,7 +186,11 @@ class TestFalsk(BaseQuery):
         return self.session.post(self.url+'/post', data=data).status_code == 200
 
 
-if __name__ == '__main__':
+def main(process, threads, task, times=2048):
+    allcost = work(task, process, threads, times=times)
+    pre = round(times // allcost, 2)
+    report(process, threads, task.__name__, pre)
 
-    print(work(TestFalsk, 2, threads=8, times=128))
-    report(2, 8, 'x')
+
+if __name__ == '__main__':
+    main(2, 16, TestFalsk, 4096)
