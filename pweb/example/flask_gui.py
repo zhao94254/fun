@@ -5,13 +5,13 @@
 # @Author  : pengyun
 
 
-import ants
-import utils
-import state
+import pweb.example.ants as ants
+import pweb.example.utils as utils
+import pweb.example.state as state
 import threading
 import importlib
 from time import sleep
-from ucb import *
+from pweb.example.ucb import *
 
 VERSION = 1.2
 ASSETS_DIR = "static/assets/"

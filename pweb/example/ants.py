@@ -4,7 +4,7 @@
 """CS 61A presents Ants Vs. SomeBees."""
 
 import random
-from ucb import main, interact, trace
+from pweb.example.ucb import main, interact, trace
 from collections import OrderedDict
 
 ################
@@ -186,7 +186,7 @@ class HarvesterAnt(Ant):
 
         colony -- The AntColony, used to access game state information.
         """
-        colony.food += 1
+        colony.food += 10
 
 
 class ThrowerAnt(Ant):
@@ -256,6 +256,7 @@ class FireAnt(Ant):
     damage = 3
     food_cost = 5
     implemented = True   # Change to True to view in the GUI
+
 
     def reduce_armor(self, amount):
         """Reduce armor by AMOUNT, and remove the FireAnt from its place if it
@@ -899,11 +900,14 @@ def make_insane_assault_plan():
     return plan
 
 
-from utils import *
-
-
+# from utils import *
+#
+#
 @main
 def run(*args):
-    Insect.reduce_armor = class_method_wrapper(Insect.reduce_armor,
-            pre=print_expired_insects)
+    # Insect.reduce_armor = class_method_wrapper(Insect.reduce_armor,
+    #         pre=print_expired_insects)
     start_with_strategy(args, interactive_strategy)
+# t = make_test_assault_plan()
+# print(t)
+# print(t.all_bees)
