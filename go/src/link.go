@@ -13,22 +13,22 @@ func Append(x int) *Node {
 }
 
 func buildLink(x int) *Node {
+	// 构造一个长度为 x 的链表
 	h := &Node{}
 	r := h
 	for i:=1; i<x;i++{
 		h.next = Append(i)
 		h = h.next
 	}
-	fmt.Println(r)
 	return r
 }
 
-func length(h *Node) int {
+func Length(h *Node) int {
+	// 获取链表长度
 	i := 1
 	for h.next != nil{
 		i++
 		h = h.next
-		fmt.Println(h.data)
 	}
 	return i
 }
@@ -36,6 +36,5 @@ func length(h *Node) int {
 
 func main()  {
 	r := buildLink(10)
-	fmt.Println(length(r))
-
+	fmt.Println(Length(r))
 }
