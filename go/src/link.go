@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Node struct {
 	data int
@@ -33,8 +35,34 @@ func Length(h *Node) int {
 	return i
 }
 
+func printLink(link *Node)  {
+	res := ""
+	for link.next != nil{
+		link = link.next
+		str :=  fmt.Sprintf("%d", link.data)
+		res += str
+		res += "->"
+	}
+	fmt.Println(res)
+}
+
+
+func Reverse(link *Node) *Node{
+	h := &Node{}
+	for link != nil {
+		rest := link.next
+		link.next = h
+		h = link
+		link = rest
+		printLink(rest)
+	}
+	return h
+}
 
 func main()  {
-	r := buildLink(10)
+	link := buildLink(10)
+	printLink(link)
+	r := Reverse(link)
 	fmt.Println(Length(r))
+	printLink(r)
 }
