@@ -41,6 +41,9 @@ func Length(h *Node) int {
 
 func printLink(link *Node)  {
 	res := ""
+	if link == nil{
+		return
+	}
 	for link.next != nil{
 		str :=  fmt.Sprintf("%d", link.data)
 		res += str
@@ -90,18 +93,20 @@ func square(x int) int  {
 	return x*x
 }
 
-func isOdd(x int) bool  {
-	return x%2 == 1
-}
-
 func main()  {
 	link := buildLink(10)
 	printLink(link)
 	r := Reverse(link)
-	fmt.Println(Length(r))
 	printLink(r)
 	r = MapLink(square, r)
 	printLink(r)
-	r = FilterLink(isOdd, r)
+	// 匿名函数使用
+	x := MapLink(func(i int) int {
+		return i*3
+	}, r)
+	printLink(x)
+	r = FilterLink(func(i int) bool {
+		return i%2==1
+	}, r)
 	printLink(r)
 }
