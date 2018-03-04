@@ -28,7 +28,7 @@ def filter(condition, row):
         return True
 
 def split_name(name):
-    return name.split(',')
+    return sum([i.split() for i in name.split(',')], [])
 
 def get_data(name, row):
     data = [row[i] for i in name]
@@ -41,7 +41,7 @@ def select(name, table, condition):
     rows = copy.deepcopy(table_to_dict(table))
     for j, i in enumerate(table_to_dict(table)):
         if filter(condition, i):
-            res.append(get_data(name, i))
+            res.append(get_data(name,i))
     return res[0] if len(res) == 1 else res
 
 if __name__ == '__main__':
@@ -58,4 +58,5 @@ if __name__ == '__main__':
     table = create_table(row, data)
     print(select('name', table, "name == 'luben'"))
     print(select('name, age', table, "name != 'luben'"))
+    print(select('name,age', table, "age != 18"))
 
