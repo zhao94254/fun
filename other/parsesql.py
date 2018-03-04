@@ -9,6 +9,7 @@ from collections import namedtuple
 import copy
 
 def create_table(row, data):
+    """row[0] 表名  row[1:] 列名 data 要插入的数据"""
     table_row = namedtuple(row[0], row[1:])
     table = [table_row(*i) for i in data]
     return table
@@ -58,5 +59,5 @@ if __name__ == '__main__':
     table = create_table(row, data)
     print(select('name', table, "name == 'luben'"))
     print(select('name, age', table, "name != 'luben'"))
-    print(select('name,age', table, "age != 18"))
+    print(select('name,age', table, "age >= 18 and location=='changzhi'"))
 
