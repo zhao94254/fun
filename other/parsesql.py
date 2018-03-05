@@ -21,28 +21,33 @@ def table_to_dict(table):
         res.append({field: getattr(t, field) for field in t._fields})
     return res
 
-
 def filter(condition, row):
+    """ 按照要求的条件进行过滤"""
     if condition:
         return eval(condition, row)
     else:
         return True
 
 def split_name(name):
+    """ xx, yy,zz -> [xx, yy, zz]"""
     return sum([i.split() for i in name.split(',')], [])
 
 def get_data(name, row):
+    """ 获取row中的多个值"""
+    #print(row.values())
     data = [row[i] for i in name]
     return data[0] if len(data) == 1 else data
 
 def select(name, table, condition):
     """ select name from table where condition"""
     res = []
-    name = split_name(name)
-    rows = copy.deepcopy(table_to_dict(table))
+    if name == '*':
+        name = table[0]._fields
+    else:
+        name = split_name(name)
     for j, i in enumerate(table_to_dict(table)):
         if filter(condition, i):
-            res.append(get_data(name,i))
+            res.append(get_data(name, i))
     return res[0] if len(res) == 1 else res
 
 if __name__ == '__main__':
@@ -59,5 +64,5 @@ if __name__ == '__main__':
     table = create_table(row, data)
     print(select('name', table, "name == 'luben'"))
     print(select('name, age', table, "name != 'luben'"))
-    print(select('name,age', table, "age >= 18 and location=='changzhi'"))
+    print(select('*', table, "age >= 18 and location=='changzhi'"))
 
