@@ -7,6 +7,7 @@
 
 from collections import namedtuple
 import copy
+import csv
 
 def create_table(row, data):
     """row[0] 表名  row[1:] 列名 data 要插入的数据"""
@@ -50,19 +51,42 @@ def select(name, table, condition):
             res.append(get_data(name, i))
     return res[0] if len(res) == 1 else res
 
+def unname(lst):
+    """ 会有一些 Unnamed: xx 的，要变成 --> NULLxx"""
+    for i, j in enumerate(lst):
+        if j.startswith('Unnamed'):
+            lst[i] = "NULL" + lst[i].split(':')[-1][1:]
+
+
+def read_csv(filename):
+    """ 将csv 文件加入，进行一些过滤"""
+    data = []
+    with open(filename) as f:
+        f_csv = csv.reader(f)
+        row = ["Row"] + next(f_csv)
+        unname(row)
+        for i, d in enumerate(f_csv):
+            data.append(d)
+            if i == 10:
+                break
+
+    return create_table(row, data)
+
 if __name__ == '__main__':
     import random
 
-    row = ('Row', 'name', 'age', 'location')
-    data = [('jack', 12, 'beijing'),
-            ('rose', 15, 'shanghai'),
-            ('aha', 20, 'taiyuan'),
-            ('liuxing', 18, 'changzhi'),
-            ('luben', 18, 'shanghai'),
-            ('douchuan', 18, 'changzhi'),
-            ('heihai', 18, 'shanghai'),]
-    table = create_table(row, data)
-    print(select('name', table, "name == 'luben'"))
-    print(select('name, age', table, "name != 'luben'"))
-    print(select('*', table, "age >= 18 and location=='changzhi'"))
+    # row = ('Row', 'name', 'age', 'location')
+    # data = [('jack', 12, 'beijing'),
+    #         ('rose', 15, 'shanghai'),
+    #         ('aha', 20, 'taiyuan'),
+    #         ('liuxing', 18, 'changzhi'),
+    #         ('luben', 18, 'shanghai'),
+    #         ('douchuan', 18, 'changzhi'),
+    #         ('heihai', 18, 'shanghai'),]
+    # table = create_table(row, data)
+    # print(select('name', table, "name == 'luben'"))
+    # print(select('name, age', table, "name != 'luben'"))
+    # print(select('*', table, "age >= 18 and location=='changzhi'"))
 
+    table = read_csv('/Users/py/Desktop/hotels_2.csv')
+    print(select('Name, ZoneID, City', table, "hid == '9553'"))
