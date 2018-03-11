@@ -7,6 +7,7 @@
 
 from collections import namedtuple
 import copy
+import csv
 
 def create_table(row, data):
     """row[0] 表名  row[1:] 列名 data 要插入的数据"""
@@ -21,43 +22,71 @@ def table_to_dict(table):
         res.append({field: getattr(t, field) for field in t._fields})
     return res
 
-
 def filter(condition, row):
+    """ 按照要求的条件进行过滤"""
     if condition:
         return eval(condition, row)
     else:
         return True
 
 def split_name(name):
+    """ xx, yy,zz -> [xx, yy, zz]"""
     return sum([i.split() for i in name.split(',')], [])
 
 def get_data(name, row):
+    """ 获取row中的多个值"""
+    #print(row.values())
     data = [row[i] for i in name]
     return data[0] if len(data) == 1 else data
 
 def select(name, table, condition):
     """ select name from table where condition"""
     res = []
-    name = split_name(name)
-    rows = copy.deepcopy(table_to_dict(table))
+    if name == '*':
+        name = table[0]._fields
+    else:
+        name = split_name(name)
     for j, i in enumerate(table_to_dict(table)):
         if filter(condition, i):
-            res.append(get_data(name,i))
+            res.append(get_data(name, i))
     return res[0] if len(res) == 1 else res
+
+def unname(lst):
+    """ 会有一些 Unnamed: xx 的，要变成 --> NULLxx"""
+    for i, j in enumerate(lst):
+        if j.startswith('Unnamed'):
+            lst[i] = "NULL" + lst[i].split(':')[-1][1:]
+
+
+def read_csv(filename):
+    """ 将csv 文件加入，进行一些过滤"""
+    data = []
+    with open(filename) as f:
+        f_csv = csv.reader(f)
+        row = ["Row"] + next(f_csv)
+        unname(row)
+        for i, d in enumerate(f_csv):
+            data.append(d)
+            if i == 10:
+                break
+
+    return create_table(row, data)
 
 if __name__ == '__main__':
     import random
 
-    row = ('Row', 'name', 'age', 'location')
-    data = [('jack', 12, 'beijing'),
-            ('rose', 15, 'shanghai'),
-            ('aha', 20, 'taiyuan'),
-            ('liuxing', 18, 'changzhi'),
-            ('luben', 18, 'shanghai'),
-            ('douchuan', 18, 'changzhi'),
-            ('heihai', 18, 'shanghai'),]
-    table = create_table(row, data)
-    print(select('name', table, "name == 'luben'"))
-    print(select('name, age', table, "name != 'luben'"))
-    print(select('name,age', table, "age >= 18 and location=='changzhi'"))
+    # row = ('Row', 'name', 'age', 'location')
+    # data = [('jack', 12, 'beijing'),
+    #         ('rose', 15, 'shanghai'),
+    #         ('aha', 20, 'taiyuan'),
+    #         ('liuxing', 18, 'changzhi'),
+    #         ('luben', 18, 'shanghai'),
+    #         ('douchuan', 18, 'changzhi'),
+    #         ('heihai', 18, 'shanghai'),]
+    # table = create_table(row, data)
+    # print(select('name', table, "name == 'luben'"))
+    # print(select('name, age', table, "name != 'luben'"))
+    # print(select('*', table, "age >= 18 and location=='changzhi'"))
 
+    table = read_csv('/Users/py/Desktop/hotels_2.csv')
+    print(select('Name, ZoneID, City', table, "hid == '9553'"))
