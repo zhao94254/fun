@@ -78,6 +78,9 @@
                 fmt.Println(k, "not in map")
             }
         }
+        
+        并发使用一个map的时候会报错，需要手动加锁
+        
     
 8. string相关
 
@@ -88,6 +91,34 @@
         sByte := []byte(s)
         sByte[2]='s' // 这里是rune类型的
         fmt.Println(string(sByte))
+        
+        但是上面这种方法是无法将字符串中的某一个字符变成汉字的。原因是因为
+        一个汉字编码占了多个字节， 使用上面的方法会报这个错误
+        
+        .\notice.go:23:13: constant 21734 overflows byte
+        
+        解决方案：
+        
+        func changeStr(s,y string, i int)  {
+            sByte := []rune(s)
+            fy := []rune(y)
+            if 0 < i && i <len(s){
+                sByte[i] = fy[0]
+                fmt.Println(string(sByte))
+            }else{
+                fmt.Println("超过索引范围")
+            }
+        }
+        
+        字符串的长度
+        
+        s := "我"
+        fmt.Println(utf8.RuneCountInString(s)) // 1  这里是rune的长度
+        fmt.Println(len(s)) // 3 这里返回的是byte的长度
+        
+        s := "é"
+        fmt.Println(utf8.RuneCountInString(s)) // 2  这里是rune的长度
+        
    
 
 一些特别坑的问题
