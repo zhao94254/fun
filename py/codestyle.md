@@ -237,4 +237,86 @@ Good
 Bad
 
 	L = [x + y + z for x in nums if x > 1 0 for y in nums2 for z in nums3 if y > z]
-		
+
+
+### 通用的一些手段   
+
+**写程序很重要的一点是控制复杂度，抽象、模块化就是解决这个问题的手段。 好的代码应该是清晰易懂，代码即注释的，这点    
+是需要很多锻炼才可以做到的，下面是一些方法：**      
+
+
+### 告别面条代码    
+
+Bad 
+
+    if val == 'x':
+        do xxx
+    elif val == 'y':
+        do xxx
+    elif val == 'z':
+        do xxx
+    elif val == 'a':
+        do xxx
+    else:
+        do xxx
+
+
+Good    
+
+    map_func = {'x': func1, 'y': func2, 'z': func3, 'a': func4}
+    if val in map_func:
+        return map_func[val]
+    else:
+        do xxx
+        
+上面这种方式在代码比较复杂的时候尤其适用， 很多时候这种代码都有大量可以复用的，可以抽象出来使用。    
+
+
+### 模块化
+
+**代码的模块化不是把代码扔在不同的py文件中，有人很天真的把代码放在不同的文件下，自以为做到了模块化，这完全就是搞笑。
+真正的模块化应该是逻辑上模块化，这是一个抽象的过程，抽象的好的程序无论是在扩展还是在维护的时候都很容易。**
+
+几个基本的方法：
+
+* 写简短的函数，可以一眼在屏幕中看完的。 如果函数太长就将它拆为更小的。
+* 经常写工具函数，将一些常用的操作抽象出来
+* 一个函数只做一个事情。
+
+### 写可读的代码 
+
+代码即注释是需要很多练习才可以实现的，做不到这一点就通过注释来讲清楚函数做了什么。      
+
+Bad    
+
+    [
+                    {
+                        "night": getTonight(self.checkinoutdate['checkindate'], i),
+                        "ratetype": self.ratekey['ratetype'],
+                        "includebreakfastqty2": self.ratekey['includebreakfastqty2'],
+                        "preeprice": preeprice
+                    }
+                for i, preeprice in zip(range((strptime(self.checkinoutdate['checkoutdate'])-strptime(self.checkinoutdate['checkindate'])).days), self.ratekey['preeprices'])],
+
+上面的这种做法是一种很糟糕的做法，读起来很痛苦，也没注释， 属于滥用python 的列表生产式
+
+
+Good
+    
+    orderitems = []
+    for i, preeprice in zip(range((strptime(self.checkinoutdate['checkoutdate'])- 
+            strptime(self.checkinoutdate['checkindate'])).days), self.ratekey['preeprices'])],
+            orderitems.append({
+                            "night": getTonight(self.checkinoutdate['checkindate'], i),
+                            "ratetype": self.ratekey['ratetype'],
+                            "includebreakfastqty2": self.ratekey['includebreakfastqty2'],
+                            "preeprice": preeprice
+                        })
+
+
+**局部变量和使用它们的地方应该尽量接近， 不要重用局部变量，防止混淆**
+
+做好手下的事情再去考虑复用，扩展等问题，就像一些常用的框架一样，很多都是作者做一些重复的事情做多了，发现可以抽象出来一个框架。
+如果一开始就想去做一个框架肯定是得不偿失的。
+
+### Code Case
