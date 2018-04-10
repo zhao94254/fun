@@ -189,6 +189,35 @@ def flatten(lst):
         else:
             yield i
 
+def max_sub(lst):
+    """最大子数组差"""
+    res = 0
+    for i in range(1, len(lst)):
+        res = max(res, find_max(lst[:i]) - find_min(lst[i:]))
+    return res
+
+def find_max(lst):
+    res = 0
+    tmp = 0
+    for i in lst:
+        tmp += i
+        if tmp < 0:
+            tmp = 0
+        else:
+            res = max(res, tmp)
+    return res
+
+def find_min(lst):
+    res = 0
+    tmp = 0
+    for i in lst:
+        tmp += i
+        if tmp > 0:
+            tmp = 0
+        res = min(tmp, res)
+    return res
+
+
 if __name__ == '__main__':
     data = [-5, 10, 5, -3, 1, 1, 1, -2, 3, -4]
     max_subarray(data)
