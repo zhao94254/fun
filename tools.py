@@ -153,3 +153,22 @@ def interact(msg=None):
 
     code.interact(msg, None, namespace)
 
+
+# # python2
+# def table_to_csv(filepath):
+#     f = file(filepath)
+#     html_content = f.read()
+#     soup = BeautifulSoup(html_content)
+#     table = soup.select_one("table")
+#     for row in table.select("tr"):
+#         print [r.text.encode("utf-8") for r in row.select("td")]
+
+# python3
+from bs4 import BeautifulSoup
+def table_to_csv(filepath):
+    with open(filepath) as f:
+        html_content = f.read()
+        soup = BeautifulSoup(html_content)
+        table = soup.select_one("table")
+        for row in table.select("tr"):
+            print([r.text for r in row.select("td")])
