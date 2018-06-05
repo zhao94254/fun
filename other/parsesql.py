@@ -36,19 +36,30 @@ def split_name(name):
 def get_data(name, row):
     """ 获取row中的多个值"""
     #print(row.values())
+    if not isinstance(name, list):
+        name = [name]
     data = [row[i] for i in name]
     return data[0] if len(data) == 1 else data
 
-def select(name, table, condition):
+def select(name, table, condition=None, group_by=None):
     """ select name from table where condition"""
     res = []
+    tmp = {}
     if name == '*':
         name = table[0]._fields
     else:
         name = split_name(name)
     for j, i in enumerate(table_to_dict(table)):
-        if filter(condition, i):
+        if condition is None or filter(condition, i):
             res.append(get_data(name, i))
+        if group_by:
+            first_key = get_data(group_by, i)
+            if first_key in tmp:
+                tmp[first_key].append(get_data(name, i))
+            else:
+                tmp[first_key] = [get_data(name, i)]
+    if tmp:
+        return tmp.keys(), tmp.items()
     return res[0] if len(res) == 1 else res
 
 def unname(lst):
@@ -75,18 +86,16 @@ def read_csv(filename):
 if __name__ == '__main__':
     import random
 
-    # row = ('Row', 'name', 'age', 'location')
-    # data = [('jack', 12, 'beijing'),
-    #         ('rose', 15, 'shanghai'),
-    #         ('aha', 20, 'taiyuan'),
-    #         ('liuxing', 18, 'changzhi'),
-    #         ('luben', 18, 'shanghai'),
-    #         ('douchuan', 18, 'changzhi'),
-    #         ('heihai', 18, 'shanghai'),]
-    # table = create_table(row, data)
+    row = ('Row', 'name', 'age', 'location')
+    data = [('jack', 12, 'beijing'),
+            ('rose', 15, 'shanghai'),
+            ('aha', 20, 'taiyuan'),
+            ('liuxing', 18, 'changzhi'),
+            ('luben', 18, 'shanghai'),
+            ('douchuan', 18, 'changzhi'),
+            ('heihai', 18, 'shanghai'),]
+    table = create_table(row, data)
     # print(select('name', table, "name == 'luben'"))
     # print(select('name, age', table, "name != 'luben'"))
     # print(select('*', table, "age >= 18 and location=='changzhi'"))
-
-    table = read_csv('/Users/py/Desktop/hotels_2.csv')
-    print(select('Name, ZoneID, City', table, "hid == '9553'"))
+    print(select('name', table, "age>=18", 'location'))
