@@ -36,10 +36,25 @@ def split_name(name):
 def get_data(name, row):
     """ 获取row中的多个值"""
     #print(row.values())
-    if not isinstance(name, list):
+    if not isinstance(name, (list, tuple)):
         name = [name]
     data = [row[i] for i in name]
     return data[0] if len(data) == 1 else data
+
+def group_get_datas(names, row):
+    if isinstance(names, list):
+        return [group_get_data(i, row) for i in names]
+    else:
+        return group_get_data(names, row)
+
+def group_get_data(name, row):
+    if name.startswith('count('):
+        return len(row)
+    elif name.startswith('sum('):
+        t_name = name[4:-1]
+        return sum([get_data(t_name, r) for r in row])
+    else:
+        return row[0][name]
 
 def select(name, table, condition=None, group_by=None):
     """ select name from table where condition"""
@@ -50,16 +65,21 @@ def select(name, table, condition=None, group_by=None):
     else:
         name = split_name(name)
     for j, i in enumerate(table_to_dict(table)):
-        if condition is None or filter(condition, i):
-            res.append(get_data(name, i))
-        if group_by:
-            first_key = get_data(group_by, i)
-            if first_key in tmp:
-                tmp[first_key].append(get_data(name, i))
+        if condition is None or filter(condition, i): # 第一步，首先进行过滤
+            if group_by:
+                first_key = get_data(group_by, i) # 这里进行 count， sum 等操作
+                if first_key in tmp:
+                    tmp[first_key].append(i)
+                else:
+                    tmp[first_key] = [i]
             else:
-                tmp[first_key] = [get_data(name, i)]
+                res.append(get_data(name, i))
     if tmp:
-        return tmp.keys(), tmp.items()
+        res = []
+        for i, j in tmp.items():
+            res.append(group_get_datas(name, j))
+        return res
+
     return res[0] if len(res) == 1 else res
 
 def unname(lst):
@@ -85,17 +105,18 @@ def read_csv(filename):
 
 if __name__ == '__main__':
     import random
+    import pprint
 
-    row = ('Row', 'name', 'age', 'location')
-    data = [('jack', 12, 'beijing'),
-            ('rose', 15, 'shanghai'),
-            ('aha', 20, 'taiyuan'),
-            ('liuxing', 18, 'changzhi'),
-            ('luben', 18, 'shanghai'),
-            ('douchuan', 18, 'changzhi'),
-            ('heihai', 18, 'shanghai'),]
+    row = ('Row', 'name', 'age', 'location', 'money')
+    data = [('jack', 12, 'beijing', 15),
+            ('rose', 15, 'shanghai', 23),
+            ('aha', 20, 'taiyuan', 345),
+            ('liuxing', 18, 'changzhi', 432),
+            ('luben', 18, 'shanghai', 233),
+            ('douchuan', 18, 'changzhi', 322),
+            ('heihai', 18, 'shanghai', 199),]
     table = create_table(row, data)
     # print(select('name', table, "name == 'luben'"))
     # print(select('name, age', table, "name != 'luben'"))
-    # print(select('*', table, "age >= 18 and location=='changzhi'"))
-    print(select('name', table, "age>=18", 'location'))
+    print(select('*', table, "age >= 11  and location=='beijing'"))
+    print(select('location, sum(money)', table, "age>=18", 'location'))
