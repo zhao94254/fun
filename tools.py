@@ -25,6 +25,7 @@ def getfile(path, end=None):
     return res
 
 def retry(times=3):
+    """对一个函数进行重试"""
     def wrap(func):
         def do(*args, **kwargs):
             t = times
@@ -41,11 +42,28 @@ def retry(times=3):
 
 
 def timeit(func):
-    """统计函数运行时间"""
+    """精确统计函数运行时间"""
     t0 = time.perf_counter()
     func()
     return time.perf_counter() - t0
 
+def count_func_time(func):
+    """统计函数运行时间的装饰器"""
+    def inner(*args, **kwargs):
+        start = time.time()
+        res = func(*args, **kwargs)
+        print("function: {} -- cost time".format(func.__name__), time.time() - start)
+        return res
+    return inner
+
+def count_func_timeit(func):
+    """精确统计函数运行时间的装饰器"""
+    def inner(*args, **kwargs):
+        start = time.perf_counter()
+        res = func(*args, **kwargs)
+        print("function: {} -- cost time".format(func.__name__), time.perf_counter() - start)
+        return res
+    return inner
 
 def count(func):
     """统计递归函数执行次数"""
@@ -85,7 +103,7 @@ class CacheProperty:
 
 
 def trace(func):
-    """跟踪函数，便于查看过程。"""
+    """跟踪函数，便于查看函数执行过程。"""
     def afunc(*args):
         print("call", func.__name__, "with", args)
         v = func(*args)
@@ -172,3 +190,10 @@ def table_to_csv(filepath):
         table = soup.select_one("table")
         for row in table.select("tr"):
             print([r.text for r in row.select("td")])
+
+def xls_to_csv(filename):
+    """ xls 转为 csv 文件"""
+    import pandas
+    name = filename.split('.')[-2]
+    xls = pandas.read_excel(filename, index_col=None)
+    xls.to_csv('{}.csv'.format(name), encoding='utf-8')
