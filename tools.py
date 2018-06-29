@@ -8,6 +8,27 @@ import signal
 import code
 import os
 
+try:
+    import Mysqldb as pymysql
+except ImportError:
+    import pymysql
+
+class Mysql:
+    def __init__(self, stream=False, **kw): #  MySQLdb.cursors.SSCursor 流式游标
+        if stream == True:
+            self._connect = pymysql.connect(cursorclass = pymysql.cursors.SSCursor, **kw)
+        else:
+            self._connect = pymysql.connect(**kw)
+    def __enter__(self):
+
+        cursor = self._connect.cursor()
+        return cursor
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._connect.commit()
+
+        self._connect.close()
+
 def getfile(path, end=None):
     """获取指定路径下的所有文件"""
     res = []
