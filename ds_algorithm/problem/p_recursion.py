@@ -62,5 +62,26 @@ def permute(s):
     helper(s, 0)
     return res
 
+def depthsum(lst):
+    """
+    嵌套列表的加权和
+    :param lst:  [1,[2,2,3],3]
+    :return: 18
+    """
+    res = 0
+    def helper(x, d):
+        nonlocal res
+        if len(x) == 0:
+            return
+        sb = x[0]
+        if not isinstance(sb, list):
+            res += sb*d
+        else:
+            helper(x[0], d+1)
+        helper(x[1:], d)
+    helper(lst, 1)
+    return res
+
 if __name__ == '__main__':
-    print(permute([1,2,3]))
+    # print(permute([1,2,3]))
+    print(depthsum([1,[2,2,3],3]))
