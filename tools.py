@@ -218,3 +218,25 @@ def xls_to_csv(filename):
     name = filename.split('.')[-2]
     xls = pandas.read_excel(filename, index_col=None)
     xls.to_csv('{}.csv'.format(name), encoding='utf-8')
+
+def sum_dict(a, b):
+    """
+    将两个字典reduce 起来，支持嵌套的dict
+    :param a: {'adult': {'zero': 0}, 'price': {'other': 347748, '-1': 9}, 'rest': {'-1': 336707}, 'hotelname': {'min3': 18, 'NULL': 26, 'all_string': 29615}, 'bed': {'other': 336716, 'NULL': 11041}, 'desc': {'fivelen': 9053, 'other': 337730, 'NULL': 974}, 'size': {'min10': 9739, 'other': 322761, '-1': 15257}}
+    :param b: {'adult': {'zero': 0}, 'price': {'other': 347748, '-1': 9}, 'rest': {'-1': 336707}, 'hotelname': {'min3': 18, 'NULL': 26, 'all_string': 29615}, 'bed': {'other': 336716, 'NULL': 11041}, 'desc': {'fivelen': 9053, 'other': 337730, 'NULL': 974}, 'size': {'min10': 9739, 'other': 322761, '-1': 15257}}
+    :return:  # {'adult': {'zero': 0}, 'price': {'other': 695496, '-1': 18}, 'rest': {'-1': 673414}, 'hotelname': {'min3': 36, 'NULL': 52, 'all_string': 59230}, 'bed': {'other': 673432, 'NULL': 22082}, 'desc': {'fivelen': 18106, 'other': 675460, 'NULL': 1948}, 'size': {'min10': 19478, 'other': 645522, '-1': 30514}}, {'adult': {'zero': 0}, 'price': {'other': 347748, '-1': 9}, 'rest': {'-1': 336707}, 'hotelname': {'min3': 18, 'NULL': 26, 'all_string': 29615}, 'bed': {'other': 336716, 'NULL': 11041}, 'desc': {'fivelen': 9053, 'other': 337730, 'NULL': 974}, 'size': {'min10': 9739, 'other': 322761, '-1': 15257}}
+    """
+    def helper(a, b):
+        for k in a.keys():
+            # 如果k 不在b里，添加默认的
+            if k not in b:
+                if isinstance(a[k], dict):
+                    b[k] = {}
+                else:
+                    b[k] = 0
+            if isinstance(a[k], dict):
+                helper(a[k], b[k])
+            else:
+                a[k] += b[k]
+        return a
+    return helper(a, b)
