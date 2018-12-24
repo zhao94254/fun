@@ -77,6 +77,13 @@ def swap_(x, n):
     x[k], x[l] = x[l], x[k]
     print(x, l, n)
 
-
-
-
+def mul_set(lst):
+    """
+    对列表的多个集合取交集
+    :param lst:
+    :return:
+    """
+    tmp = lst[0]
+    for i in range(1, len(lst)):
+        tmp = lst[i] & tmp
+    return tmp
