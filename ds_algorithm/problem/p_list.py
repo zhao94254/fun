@@ -217,6 +217,25 @@ def find_min(lst):
         res = min(tmp, res)
     return res
 
+def max_profit(prices):
+    """
+    股票交易 - 可以交易多次
+    解决思路 优先队列
+    :param prices:
+    :return:
+    """
+    _q = []
+    res = 0
+    for d in prices:
+
+        if len(_q) > 0:
+            top = min(_q)
+            if d > top:
+                _q.remove(top)
+                res += (d-top)
+                _q.append(d) # append 两次是为了获取全局最优解
+        _q.append(d)
+    return res
 
 if __name__ == '__main__':
     data = [-5, 10, 5, -3, 1, 1, 1, -2, 3, -4]
