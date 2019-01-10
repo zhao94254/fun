@@ -58,7 +58,25 @@ def lcp(strs):
         res = res if len(res) > len(tmp) else tmp
     return res
 
+def max_unstr(lst):
+    """
+    最长无重复子串
+    :param lst:
+    :return:
+    """
+    skr = {}
+    res = 0
+    s, f = 0, 0
+    llen = len(lst)
+    while  s < llen and f < llen:
+        skr[lst[f]] = skr.get(lst[f], 0) + 1
+        if skr[lst[f]] > 1:
+            skr[lst[f]] = 0 # 发现重复 变为0
+            s += 1
+        f += 1
+        res = max([f-s, res])
 
+    return res
 
 if __name__ == '__main__':
 
