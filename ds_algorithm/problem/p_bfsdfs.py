@@ -87,6 +87,35 @@ def b_json(data, key):
             queue.extend(f)
     return res, len(res)
 
+def reach_end(_map):
+    """
+    给一个地图，问是否可以走到终点
+    :param _map:
+    :return:
+    """
+    m, n = len(_map), len(_map[0])
+    st = [(0,0)]
+    while st:
+        p, e = st.pop(0)
+        if p + 1 == m:
+            if _map[p][e+1] == 1:
+                st.append((p, e+1))
+            elif _map[p][e+1] == 9:
+                return True
+            continue
+        if e + 1 == m:
+            if _map[p+1][e] == 1:
+                st.append((p+1, e))
+            elif _map[p+1][e] == 9:
+                return True
+            continue
+        if _map[p+1][e]==9 or _map[p][e+1]==9:
+            return True
+        if _map[p+1][e] == 1:
+            st.append((p+1,e))
+        if _map[p][e+1] == 1:
+            st.append((p, e+1))
+    return False
 
 if __name__ == '__main__':
     data = [
