@@ -87,3 +87,25 @@ def mul_set(lst):
     for i in range(1, len(lst)):
         tmp = lst[i] & tmp
     return tmp
+
+def combine(lst, n):
+    """
+    组合
+    通过递归实现
+    :param lst:
+    :return:
+    """
+    res = []
+    tmp = [0] * n
+    def helper(cur, ni):
+        if ni == n:
+            res.append(tmp[:])
+            return
+        for i in range(cur, len(lst)):
+             tmp[ni] = lst[i]
+             helper(cur+1, ni+1)
+    helper(0, 0)
+    return res
+
+if __name__ == '__main__':
+    print(combine([1,2,3,4,5], 2))
